@@ -1,7 +1,7 @@
 package com.optimodlyon.optimodlyon.model;
 
 public class IntersectionModel {
-    Integer id;
+    Long id;
     double latitude;
     double longitude;
     // Default constructor
@@ -9,14 +9,14 @@ public class IntersectionModel {
     }
 
     // Parameterized constructor
-    public IntersectionModel(Integer id, double latitude, double longitude) {
+    public IntersectionModel(Long id, double latitude, double longitude) {
         this.id = id;
         this.latitude = latitude;
         this.longitude = longitude;
     }
 
     // Getters
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
@@ -28,8 +28,12 @@ public class IntersectionModel {
         return longitude;
     }
 
+    public IntersectionModel getIntersectionById(Long id) {
+        return this;
+    }
+
     // Setters
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -39,5 +43,10 @@ public class IntersectionModel {
 
     public void setLongitude(double longitude) {
         this.longitude = longitude;
+    }
+
+    @Override
+    public String toString() {
+        return "IntersectionModel{id=" + id + ", latitude=" + latitude + ", longitude=" + longitude + "}";
     }
 }

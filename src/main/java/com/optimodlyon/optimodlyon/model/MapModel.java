@@ -38,4 +38,9 @@ import java.util.List;
         public void setRoads(List<RoadModel> roads) {
             this.roads = roads;
         }
+
+        @Override
+        public String toString() {
+            return "MapModel{id=" + id + ", intersections=" + intersections + ", roads=" + roads + "}";
+        }
 }

@@ -1,7 +1,6 @@
 package com.optimodlyon.optimodlyon.model;
 
 public class RoadModel {
-    int id;
     double length;
     IntersectionModel origin;
     IntersectionModel destination;
@@ -10,20 +9,11 @@ public class RoadModel {
     public RoadModel() {
     }
 
-    public RoadModel(int id, double length, IntersectionModel origin, IntersectionModel destination, String name) {
-        this.id = id;
+    public RoadModel(double length, IntersectionModel origin, IntersectionModel destination, String name) {
         this.length = length;
         this.origin = origin;
         this.destination = destination;
         this.name = name;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public double getLength() {
@@ -56,5 +46,10 @@ public class RoadModel {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "RoadModel{length=" + length + ", origin=" + origin + ", destination=" + destination + ", name='" + name + "'}";
     }
 }
