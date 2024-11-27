@@ -17,9 +17,9 @@ public class MapService {
 
     @PostConstruct
     public void init() {
-        // Parse the XML files and load the data
-        Parser.parsePlan("src/public/xml/grandPlan.xml");
-        Parser.parseDemande("src/public/xml/demandeGrand7.xml");
+        // Parse the XML files and load the data  TO DO: change to grandPlan and demandeGrand7 on final version
+        Parser.parsePlan("src/public/xml/petitPlan.xml");
+        Parser.parseDemande("src/public/xml/demandePetit1.xml");
         this.data = Parser.data;
     }
 

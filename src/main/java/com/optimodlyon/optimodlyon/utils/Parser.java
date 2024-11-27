@@ -121,13 +121,5 @@ public class Parser {
         }
     }
 
-    public static void main(String[] args) {
-        parsePlan("src/public/xml/grandPlan.xml");
-        parseDemande("src/public/xml/demandeGrand7.xml");
 
-        // Print the data object to check if the parsing is correct
-        System.out.println(data.getIntersections());
-        System.out.println(data.getRoads());
-        System.out.println(data.getMap());
-    }
 }
