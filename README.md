@@ -13,9 +13,9 @@ Optimod'Lyon is a delivery optimization application designed to streamline the d
    - Pickup location
    - Destination
    - Pickup and delivery duration
-3. **Manual Request Addition:** Users can manually add new delivery requests.
-4. **Optimal Path Calculation:** The app computes the best routes for each courier to handle their deliveries efficiently.
-5. **Data Parsing:** Delivery requests and map data are loaded from an XML file every time the app starts.
+3. **Manual Request Addition:** Users can manually add new delivery requests by selecting the locations directly on the map.
+4. **Optimal Path Calculation:** The app computes the best routes for each courier to handle their deliveries efficiently, depending on the number of available couriers.
+5. **Data Parsing:** Delivery requests and map data are loaded from an XML file every time the app starts, and then saved in the Data Class.
 
 ---
 
@@ -23,9 +23,9 @@ Optimod'Lyon is a delivery optimization application designed to streamline the d
 
 1. **Input Data:**
    - The user specifies the number of couriers.
-   - Delivery requests and map details are read from an XML file.
+   - Delivery requests and map details are read from the XML files also chosen from the user.
 2. **Manual Adjustments:**
-   - Users can add new delivery requests directly through the app.
+   - Users can add new delivery requests directly through the app. The requests will be saved in the Data class.
 3. **Optimal Path Output:**
    - The app computes and displays the optimal route for each courier, considering all requests and durations.
 
@@ -34,19 +34,16 @@ Optimod'Lyon is a delivery optimization application designed to streamline the d
 ## Input Format
 
 - **Delivery Requests:**
-  - Pickup location
-  - Destination
-  - Pickup duration
-  - Delivery duration
+  - The requests are loaded from the XML file chosen by the user.
+  - The user can input a new Delivery request by indicating the Pickup location, the Destination, the Pickup duration, and the Delivery duration
 - **Map Data:**
-  - A connectivity map showing travel times between locations.
-
+  - The roads and the intersections are loaded from the XML file to create the map.
 ---
 
 ## Purpose
 
 Optimod'Lyon simplifies delivery planning by providing:
 
-- Efficient routing for couriers
+- Efficient routing for couriers depending on the number of available couriers
 - User-friendly management of delivery requests
 - Flexible input options for real-world scenarios
