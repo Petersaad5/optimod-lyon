@@ -1,4 +1,3 @@
-// src/main/java/com/optimodlyon/optimodlyon/utils/Parser.java
 package com.optimodlyon.optimodlyon.utils;
 
 import com.optimodlyon.optimodlyon.model.*;
@@ -14,14 +13,14 @@ public class Parser {
     // Create global data object to store the parsed data
     public static Data data = new Data();
 
-    public static void parsePlan(String filePath) {
+    public static void parsePlan(File file) {
         List<IntersectionModel> intersections = new ArrayList<>();
         List<RoadModel> roads = new ArrayList<>();
 
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
-            Document document = builder.parse(new File(filePath));
+            Document document = builder.parse(file);
             document.getDocumentElement().normalize();
 
             // parse <noeud> elements
@@ -67,59 +66,4 @@ public class Parser {
             e.printStackTrace();
         }
     }
-
-    public static void parseDemande(String filePath) {
-        try {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            Document document = builder.parse(new File(filePath));
-            document.getDocumentElement().normalize();
-
-            // parse <entrepot> elements
-            NodeList warehouseList = document.getElementsByTagName("entrepot");
-            for (int i = 0; i < warehouseList.getLength(); i++) {
-                Node node = warehouseList.item(i);
-                if (node.getNodeType() == Node.ELEMENT_NODE) {
-                    Element element = (Element) node;
-                    int adresse = Integer.parseInt(element.getAttribute("adresse"));
-                    String heureDepartStr = element.getAttribute("heureDepart");
-
-                    // parse heureDepart and create Date object
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("H:m:s");
-                    Date heureDepart = dateFormat.parse(heureDepartStr);
-
-                    // retrieve the IntersectionModel using the id
-                    IntersectionModel address = intersectionMap.get(adresse);
-
-                    // create the object
-                    WarehouseModel warehouse = new WarehouseModel(heureDepart, address);
-                }
-            }
-
-            // parse <livraison> elements
-            NodeList deliveryList = document.getElementsByTagName("livraison");
-            for (int i = 0; i < deliveryList.getLength(); i++) {
-                Node node = deliveryList.item(i);
-                if (node.getNodeType() == Node.ELEMENT_NODE) {
-                    Element element = (Element) node;
-                    Long origine = Long.parseLong(element.getAttribute("adresseEnlevement"));
-                    Long destination = Long.parseLong(element.getAttribute("adresseLivraison"));
-                    int dureeEnlevement = Integer.parseInt(element.getAttribute("dureeEnlevement"));
-                    int dureeLivraison = Integer.parseInt(element.getAttribute("dureeLivraison"));
-
-                    // retrieve the IntersectionModel using the id
-                    IntersectionModel destinationIntersection = intersectionMap.get(destination);
-                    IntersectionModel originIntersection = intersectionMap.get(origine);
-
-                    // create the object
-                    DeliveryModel delivery = new DeliveryModel(dureeLivraison, dureeEnlevement, destinationIntersection, originIntersection);
-                }
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
 }

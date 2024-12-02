@@ -29,15 +29,7 @@ public class MapController {
         return mapService.getMapData();
     }
 
-    @GetMapping("/intersections")
-    public List<IntersectionModel> getIntersections() {
-        return mapService.getIntersections();
-    }
 
-    @GetMapping("/roads")
-    public List<RoadModel> getRoads() {
-        return mapService.getRoads();
-    }
 
     @PostMapping("/parse")
     public MapModel parseMapFile(@RequestParam("file") MultipartFile file) {
