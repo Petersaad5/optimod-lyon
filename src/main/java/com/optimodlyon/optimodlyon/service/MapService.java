@@ -8,20 +8,23 @@ import com.optimodlyon.optimodlyon.utils.Parser;
 import org.springframework.stereotype.Service;
 
 import jakarta.annotation.PostConstruct;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
 public class MapService {
     private Data data;
 
-    @PostConstruct
-    public void init() {
-        // Parse the XML files and load the data  TODO: change to grandPlan and demandeGrand7 on final version
-        Parser.parsePlan("src/public/xml/petitPlan.xml");
-        Parser.parseDemande("src/public/xml/demandePetit1.xml");
+    public MapModel parseAndGetMapData(MultipartFile file) throws IOException {
+        // Parse the uploaded XML file
+        Parser.parsePlan(file.getInputStream().toString());
         this.data = Parser.data;
+        return data.getMap();
     }
+
+
 
     public MapModel getMapData() {
         return data.getMap();

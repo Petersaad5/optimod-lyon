@@ -6,11 +6,10 @@ import com.optimodlyon.optimodlyon.model.MapModel;
 import com.optimodlyon.optimodlyon.model.RoadModel;
 import com.optimodlyon.optimodlyon.service.MapService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -38,5 +37,14 @@ public class MapController {
     @GetMapping("/roads")
     public List<RoadModel> getRoads() {
         return mapService.getRoads();
+    }
+
+    @PostMapping("/parse")
+    public MapModel parseMapFile(@RequestParam("file") MultipartFile file) {
+        try {
+            return mapService.parseAndGetMapData(file);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to parse XML file", e);
+        }
     }
 }
