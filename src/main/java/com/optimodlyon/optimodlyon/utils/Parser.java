@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Parser {
-    private static Map<Long, IntersectionModel> intersectionMap = new HashMap<>();
+    public static Map<Long, IntersectionModel> intersectionMap = new HashMap<>();
 
     // Create global data object to store the parsed data
     public static Data data = new Data();
