@@ -66,4 +66,56 @@ public class Parser {
             e.printStackTrace();
         }
     }
+    public static void parseDemande(File file) {
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document document = builder.parse(file);
+            document.getDocumentElement().normalize();
+
+            // parse <entrepot> elements
+            NodeList warehouseList = document.getElementsByTagName("entrepot");
+            for (int i = 0; i < warehouseList.getLength(); i++) {
+                Node node = warehouseList.item(i);
+                if (node.getNodeType() == Node.ELEMENT_NODE) {
+                    Element element = (Element) node;
+                    int adresse = Integer.parseInt(element.getAttribute("adresse"));
+                    String heureDepartStr = element.getAttribute("heureDepart");
+
+                    // parse heureDepart and create Date object
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("H:m:s");
+                    Date heureDepart = dateFormat.parse(heureDepartStr);
+
+                    // retrieve the IntersectionModel using the id
+                    IntersectionModel address = intersectionMap.get((long) adresse);
+
+                    // create the object
+                    WarehouseModel warehouse = new WarehouseModel(heureDepart, address);
+                }
+            }
+
+            // parse <livraison> elements
+            NodeList deliveryList = document.getElementsByTagName("livraison");
+            for (int i = 0; i < deliveryList.getLength(); i++) {
+                Node node = deliveryList.item(i);
+                if (node.getNodeType() == Node.ELEMENT_NODE) {
+                    Element element = (Element) node;
+                    Long origine = Long.parseLong(element.getAttribute("adresseEnlevement"));
+                    Long destination = Long.parseLong(element.getAttribute("adresseLivraison"));
+                    int dureeEnlevement = Integer.parseInt(element.getAttribute("dureeEnlevement"));
+                    int dureeLivraison = Integer.parseInt(element.getAttribute("dureeLivraison"));
+
+                    // retrieve the IntersectionModel using the id
+                    IntersectionModel destinationIntersection = intersectionMap.get(destination);
+                    IntersectionModel originIntersection = intersectionMap.get(origine);
+
+                    // create the object
+                    DeliveryModel delivery = new DeliveryModel(dureeLivraison, dureeEnlevement, destinationIntersection, originIntersection);
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
