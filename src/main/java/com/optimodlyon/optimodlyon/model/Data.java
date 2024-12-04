@@ -2,12 +2,12 @@ package com.optimodlyon.optimodlyon.model;
 import java.util.List;
 
 public class Data {
-    MapModel map;
+    static MapModel map;
     List<IntersectionModel> intersections;
     List<RoadModel> roads;
     List <CourierModel> couriers;
     List <DeliveryModel> deliveries;
-    DeliveryRequestModel deliveryRequest;
+    static DeliveryRequestModel deliveryRequest;
     List <WarehouseModel> warehouses;
 
 
@@ -20,7 +20,7 @@ public class Data {
         this.roads = roads;
     }
 
-    public MapModel getMap() {
+    public static MapModel getMap() {
         return map;
     }
 
@@ -52,7 +52,7 @@ public class Data {
         this.couriers = couriers;
     }
 
-    public DeliveryRequestModel getDeliveryRequest() {
+    public static DeliveryRequestModel getDeliveryRequest() {
         return deliveryRequest;
     }
 

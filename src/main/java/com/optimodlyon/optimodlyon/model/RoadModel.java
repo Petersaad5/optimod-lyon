@@ -48,6 +48,13 @@ public class RoadModel {
         this.name = name;
     }
 
+    public boolean containsIntersection(Long id) {
+        if(origin.getId().equals(id) || destination.getId().equals(id)) {
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public String toString() {
         return "RoadModel{length=" + length + ", origin=" + origin + ", destination=" + destination + ", name='" + name + "'}";
