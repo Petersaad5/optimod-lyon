@@ -7,6 +7,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+
 public class Parser {
     public static Map<Long, IntersectionModel> intersectionMap = new HashMap<>();
 
@@ -80,7 +81,7 @@ public class Parser {
                 Node node = warehouseList.item(i);
                 if (node.getNodeType() == Node.ELEMENT_NODE) {
                     Element element = (Element) node;
-                    int adresse = Integer.parseInt(element.getAttribute("adresse"));
+                    long adresse = Long.parseLong(element.getAttribute("adresse"));
                     String heureDepartStr = element.getAttribute("heureDepart");
 
                     // Parse heureDepart and create Date object
@@ -88,37 +89,52 @@ public class Parser {
                     Date heureDepart = dateFormat.parse(heureDepartStr);
 
                     // Retrieve the IntersectionModel using the id
-                    IntersectionModel address = intersectionMap.get((long) adresse);
+                    IntersectionModel address = intersectionMap.get(adresse);
+//                    if (address == null) {
+//                        address = new IntersectionModel(adresse);
+//                        intersectionMap.put(adresse, address);
+//                    }
 
                     // Create the WarehouseModel object
                     warehouse = new WarehouseModel(heureDepart, address);
                 }
             }
 
+            // Create the DeliveryRequestModel object
+            DeliveryRequestModel deliveryRequest = new DeliveryRequestModel();
+            deliveryRequest.setWarehouse(warehouse);
+            deliveryRequest.setId(1L); //TODO: set the id so its not null
+            deliveryRequest.setDeliveries(new ArrayList<>());
+
             // Parse <livraison> elements
-            List<DeliveryModel> deliveries = new ArrayList<>();
             NodeList deliveryList = document.getElementsByTagName("livraison");
             for (int i = 0; i < deliveryList.getLength(); i++) {
                 Node node = deliveryList.item(i);
                 if (node.getNodeType() == Node.ELEMENT_NODE) {
                     Element element = (Element) node;
-                    Long origine = Long.parseLong(element.getAttribute("adresseEnlevement"));
-                    Long destination = Long.parseLong(element.getAttribute("adresseLivraison"));
+                    long origine = Long.parseLong(element.getAttribute("adresseEnlevement"));
+                    long destination = Long.parseLong(element.getAttribute("adresseLivraison"));
                     int dureeEnlevement = Integer.parseInt(element.getAttribute("dureeEnlevement"));
                     int dureeLivraison = Integer.parseInt(element.getAttribute("dureeLivraison"));
 
                     // Retrieve the IntersectionModel using the id
-                    IntersectionModel destinationIntersection = intersectionMap.get(destination);
                     IntersectionModel originIntersection = intersectionMap.get(origine);
+//                    if (originIntersection == null) {
+//                        originIntersection = new IntersectionModel(origine);
+//                        intersectionMap.put(origine, originIntersection);
+//                    }
+
+                    IntersectionModel destinationIntersection = intersectionMap.get(destination);
+//                    if (destinationIntersection == null) {
+//                        destinationIntersection = new IntersectionModel(destination);
+//                        intersectionMap.put(destination, destinationIntersection);
+//                    }
 
                     // Create the DeliveryModel object
                     DeliveryModel delivery = new DeliveryModel(dureeLivraison, dureeEnlevement, destinationIntersection, originIntersection);
-                    deliveries.add(delivery);
+                    deliveryRequest.getDeliveries().add(delivery);
                 }
             }
-
-            // Create the DeliveryRequestModel object
-            DeliveryRequestModel deliveryRequest = new DeliveryRequestModel(null, warehouse, deliveries);
 
             // Set the parsed delivery request in the data object
             data.setDeliveryRequest(deliveryRequest);

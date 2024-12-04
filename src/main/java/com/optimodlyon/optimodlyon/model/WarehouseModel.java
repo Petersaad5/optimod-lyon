@@ -22,8 +22,8 @@ public class WarehouseModel {
         this.departureTime = departureTime;
     }
 
-    public Long getAddress() {
-        return address.getId();
+    public IntersectionModel getAddress() {
+        return this.address;
     }
 
     public void setAddress(IntersectionModel address) {
