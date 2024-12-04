@@ -1,4 +1,3 @@
-// src/main/java/com/optimodlyon/optimodlyon/utils/Parser.java
 package com.optimodlyon.optimodlyon.utils;
 
 import com.optimodlyon.optimodlyon.model.*;
@@ -14,14 +13,14 @@ public class Parser {
     // Create global data object to store the parsed data
     public static Data data = new Data();
 
-    public static void parsePlan(String filePath) {
+    public static void parsePlan(File file) {
         List<IntersectionModel> intersections = new ArrayList<>();
         List<RoadModel> roads = new ArrayList<>();
 
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
-            Document document = builder.parse(new File(filePath));
+            Document document = builder.parse(file);
             document.getDocumentElement().normalize();
 
             // parse <noeud> elements
@@ -67,12 +66,11 @@ public class Parser {
             e.printStackTrace();
         }
     }
-
-    public static void parseDemande(String filePath) {
+    public static void parseDemande(File file) {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
-            Document document = builder.parse(new File(filePath));
+            Document document = builder.parse(file);
             document.getDocumentElement().normalize();
 
             // parse <entrepot> elements
@@ -89,7 +87,7 @@ public class Parser {
                     Date heureDepart = dateFormat.parse(heureDepartStr);
 
                     // retrieve the IntersectionModel using the id
-                    IntersectionModel address = intersectionMap.get(adresse);
+                    IntersectionModel address = intersectionMap.get((long) adresse);
 
                     // create the object
                     WarehouseModel warehouse = new WarehouseModel(heureDepart, address);
@@ -120,6 +118,4 @@ public class Parser {
             e.printStackTrace();
         }
     }
-
-
 }

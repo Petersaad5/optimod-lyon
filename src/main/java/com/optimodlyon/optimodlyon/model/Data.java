@@ -5,6 +5,7 @@ public class Data {
     MapModel map;
     List<IntersectionModel> intersections;
     List<RoadModel> roads;
+    List <CourierModel> couriers;
 
     public Data() {
     }
@@ -39,5 +40,11 @@ public class Data {
         this.roads = roads;
     }
 
+    public List<CourierModel> getCouriers() {
+        return couriers;
+    }
 
+    public void setCouriers(List<CourierModel> couriers) {
+        this.couriers = couriers;
+    }
 }

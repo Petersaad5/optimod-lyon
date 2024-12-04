@@ -1,21 +1,18 @@
 package com.optimodlyon.optimodlyon.controller;
 
-import com.optimodlyon.optimodlyon.model.Data;
-import com.optimodlyon.optimodlyon.model.IntersectionModel;
 import com.optimodlyon.optimodlyon.model.MapModel;
-import com.optimodlyon.optimodlyon.model.RoadModel;
 import com.optimodlyon.optimodlyon.service.MapService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/map")
 @CrossOrigin(origins = "http://localhost:4200")
 public class MapController {
+
     private final MapService mapService;
 
     @Autowired
@@ -23,20 +20,9 @@ public class MapController {
         this.mapService = mapService;
     }
 
-
     @GetMapping
     public MapModel getMapData() {
         return mapService.getMapData();
-    }
-
-    @GetMapping("/intersections")
-    public List<IntersectionModel> getIntersections() {
-        return mapService.getIntersections();
-    }
-
-    @GetMapping("/roads")
-    public List<RoadModel> getRoads() {
-        return mapService.getRoads();
     }
 
     @PostMapping("/parse")

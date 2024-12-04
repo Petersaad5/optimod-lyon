@@ -1,10 +1,10 @@
 package com.optimodlyon.optimodlyon.model;
 
 public class DeliveryModel {
-    int deliveryDuration;
-    int pickupDuration;
-    IntersectionModel destination;
-    IntersectionModel origin;
+    private int deliveryDuration;
+    private int pickupDuration;
+    private IntersectionModel destination;
+    private IntersectionModel origin;
 
     public DeliveryModel() {
     }
@@ -44,4 +44,7 @@ public class DeliveryModel {
         return origin;
     }
 
+    public void setOrigin(IntersectionModel origin) {
+        this.origin = origin;
+    }
 }
