@@ -1,61 +1,42 @@
 package com.optimodlyon.optimodlyon.model;
 
-public class DeliveryRequestModel {
+import java.util.List;
 
-    private Long destinationId;
-    private Long originId;
-    private Integer deliveryDuration;
-    private Integer deliveryTime;
+public class DeliveryRequestModel {
+    private Long id;
+    private WarehouseModel warehouse;
+    private List<DeliveryModel> deliveries;
 
     public DeliveryRequestModel() {
     }
 
-    public DeliveryRequestModel(Long originId, Long destinationId, Integer deliveryDuration, Integer deliveryTime) {
-        this.originId = originId;
-        this.destinationId = destinationId;
-        this.deliveryDuration = deliveryDuration;
-        this.deliveryTime = deliveryTime;
+    public DeliveryRequestModel(Long id, WarehouseModel warehouse, List<DeliveryModel> deliveries) {
+        this.id = id;
+        this.warehouse = warehouse;
+        this.deliveries = deliveries;
     }
 
-    public Long getDestinationId() {
-        return destinationId;
+    public Long getId() {
+        return id;
     }
 
-    public void setDestinationId(Long destinationId) {
-        this.destinationId = destinationId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public Long getOriginId() {
-        return originId;
+    public WarehouseModel getWarehouse() {
+        return warehouse;
     }
 
-    public void setOriginId(Long originId) {
-        this.originId = originId;
+    public void setWarehouse(WarehouseModel warehouse) {
+        this.warehouse = warehouse;
     }
 
-    public Integer getDeliveryDuration() {
-        return deliveryDuration;
+    public List<DeliveryModel> getDeliveries() {
+        return deliveries;
     }
 
-    public void setDeliveryDuration(Integer deliveryDuration) {
-        this.deliveryDuration = deliveryDuration;
-    }
-
-    public Integer getDeliveryTime() {
-        return deliveryTime;
-    }
-
-    public void setDeliveryTime(Integer deliveryTime) {
-        this.deliveryTime = deliveryTime;
-    }
-
-    @Override
-    public String toString() {
-        return "DeliveryRequestModel{" +
-                "destinationId=" + destinationId +
-                ", originId=" + originId +
-                ", deliveryDuration=" + deliveryDuration +
-                ", deliveryTime=" + deliveryTime +
-                '}';
+    public void setDeliveries(List<DeliveryModel> deliveries) {
+        this.deliveries = deliveries;
     }
 }
