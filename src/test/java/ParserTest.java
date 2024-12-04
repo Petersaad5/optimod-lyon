@@ -9,7 +9,6 @@ import java.io.File;
 import java.util.List;
 
 import static org.junit.Assert.*;
-// import static org.junit.Assert.assertEquals;
 
 public class ParserTest {
 
@@ -22,7 +21,6 @@ public class ParserTest {
 
     @Test
     public void testParsePlan() {
-        // String filePath = "src/public/xml/petitPlan.xml";
         File file = new File("src/public/xml/petitPlan.xml");
         Parser.parsePlan(file);
 
