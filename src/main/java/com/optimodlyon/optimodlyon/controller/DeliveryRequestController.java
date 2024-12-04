@@ -1,8 +1,8 @@
 package com.optimodlyon.optimodlyon.controller;
 
-import com.optimodlyon.optimodlyon.model.Data;
-import com.optimodlyon.optimodlyon.model.DeliveryRequestModel;
+import com.optimodlyon.optimodlyon.model.IntersectionModel;
 import com.optimodlyon.optimodlyon.service.DeliveryRequestService;
+import com.optimodlyon.optimodlyon.utils.TourOptimizer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,7 +22,7 @@ public class DeliveryRequestController {
     }
 
     @PostMapping("/parse")
-    public DeliveryRequestModel parseDeliveryRequestFile(@RequestParam("file") MultipartFile file) {
+    public TourOptimizer.Tour parseDeliveryRequestFile(@RequestParam("file") MultipartFile file) {
         try {
             return deliveryRequestService.parseAndGetDeliveryRequestData(file);
         } catch (IOException e) {

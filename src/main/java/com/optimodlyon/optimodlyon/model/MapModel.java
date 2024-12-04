@@ -1,4 +1,5 @@
 package com.optimodlyon.optimodlyon.model;
+import java.util.ArrayList;
 import java.util.List;
 
     public class MapModel {
@@ -37,6 +38,24 @@ import java.util.List;
 
         public void setRoads(List<RoadModel> roads) {
             this.roads = roads;
+        }
+        public List<RoadModel> getRoadsFromIntersection(IntersectionModel intersection) {
+            List<RoadModel> result = new ArrayList<>();
+            for (RoadModel road : roads) {
+                if (road.getOrigin().equals(intersection)) {
+                    result.add(road);
+                }
+            }
+            return result;
+        }
+
+        public RoadModel getRoadBetween(IntersectionModel origin, IntersectionModel destination) {
+            for (RoadModel road : roads) {
+                if (road.getOrigin().equals(origin) && road.getDestination().equals(destination)) {
+                    return road;
+                }
+            }
+            return null;
         }
 
         @Override
