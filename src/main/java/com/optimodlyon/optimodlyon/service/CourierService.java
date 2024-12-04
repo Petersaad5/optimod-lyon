@@ -1,12 +1,13 @@
 package com.optimodlyon.optimodlyon.service;
 
 import com.optimodlyon.optimodlyon.model.CourierModel;
+import com.optimodlyon.optimodlyon.model.Data;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 @Service
 public class CourierService {
@@ -17,6 +18,13 @@ public class CourierService {
             "Parker Thomas", "Reese Taylor", "Skyler Moore", "Dakota Jackson"
     };
 
+    private final DataService dataService;
+
+    @Autowired
+    public CourierService(DataService dataService) {
+        this.dataService = dataService;
+    }
+
     public List<CourierModel> generateRandomCouriers(int count) {
         List<String> nameList = new ArrayList<>(List.of(NAMES));
         Collections.shuffle(nameList);
@@ -25,6 +33,9 @@ public class CourierService {
         for (int i = 0; i < count && i < nameList.size(); i++) {
             couriers.add(new CourierModel((long) i, nameList.get(i), new ArrayList<>()));
         }
+        Data data = dataService.getData();
+        data.setCouriers(couriers);
+        dataService.setData(data);
         return couriers;
     }
 }

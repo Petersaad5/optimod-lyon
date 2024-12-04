@@ -3,6 +3,7 @@ package com.optimodlyon.optimodlyon.service;
 import com.optimodlyon.optimodlyon.model.Data;
 import com.optimodlyon.optimodlyon.model.MapModel;
 import com.optimodlyon.optimodlyon.utils.Parser;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -11,7 +12,12 @@ import java.io.IOException;
 
 @Service
 public class MapService {
-    private Data data;
+    private final DataService dataService;
+
+    @Autowired
+    public MapService(DataService dataService) {
+        this.dataService = dataService;
+    }
 
     public MapModel parseAndGetMapData(MultipartFile file) throws IOException {
         // Convert MultipartFile to File
@@ -20,11 +26,12 @@ public class MapService {
 
         // Parse the uploaded XML file
         Parser.parsePlan(convFile);
-        this.data = Parser.data;
+        Data data = Parser.data;
+        dataService.setData(data);
         return data.getMap();
     }
 
     public MapModel getMapData() {
-        return data.getMap();
+        return dataService.getData().getMap();
     }
 }
