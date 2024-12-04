@@ -6,6 +6,10 @@ public class Data {
     List<IntersectionModel> intersections;
     List<RoadModel> roads;
     List <CourierModel> couriers;
+    List <DeliveryModel> deliveries;
+    DeliveryRequestModel deliveryRequest;
+    List <WarehouseModel> warehouses;
+
 
     public Data() {
     }
@@ -46,5 +50,13 @@ public class Data {
 
     public void setCouriers(List<CourierModel> couriers) {
         this.couriers = couriers;
+    }
+
+    public DeliveryRequestModel getDeliveryRequest() {
+        return deliveryRequest;
+    }
+
+    public void setDeliveryRequest(DeliveryRequestModel deliveryRequest) {
+        this.deliveryRequest = deliveryRequest;
     }
 }
