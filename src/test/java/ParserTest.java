@@ -5,10 +5,10 @@ import com.optimodlyon.optimodlyon.utils.Parser;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.util.List;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
 
 public class ParserTest {
 
@@ -21,8 +21,8 @@ public class ParserTest {
 
     @Test
     public void testParsePlan() {
-        String filePath = "src/public/xml/petitPlan.xml";
-        Parser.parsePlan(filePath);
+        File file = new File("src/public/xml/petitPlan.xml");
+        Parser.parsePlan(file);
 
         List<IntersectionModel> intersections = Parser.data.getIntersections();
         List<RoadModel> roads = Parser.data.getRoads();
@@ -35,5 +35,21 @@ public class ParserTest {
         // Add more assertions to verify the correctness of parsed data
         assertEquals(308, intersections.size()); // Example assertion
         assertEquals(616, roads.size()); // Example assertion
+    }
+
+    @Test
+    public void testParseDemande() {
+        File file = new File("src/public/xml/demandePetit2.xml");
+        Parser.parseDemande(file);
+
+        Data data = Parser.data;
+        assertNotNull(data.getDeliveryRequest());
+
+
+
+
+        // Verify the deliveries
+        assertEquals(2, data.getDeliveryRequest().getDeliveries().size());
+
     }
 }
