@@ -5,6 +5,7 @@ import java.util.List;
         int id;
         List<IntersectionModel> intersections;
         List<RoadModel> roads;
+        private double cost;
 
         public MapModel() {
         }
@@ -15,12 +16,30 @@ import java.util.List;
             this.roads = roads;
         }
 
+        public MapModel(double cost) {
+            this.cost = cost;
+        }
+
+        public MapModel(List<RoadModel> roads, List<IntersectionModel> intersections, int id, double cost) {
+            this.roads = roads;
+            this.intersections = intersections;
+            this.id = id;
+            this.cost = cost;
+        }
+
         public int getId() {
             return id;
         }
 
         public void setId(int id) {
             this.id = id;
+        }
+        public double getCost() {
+            return cost;
+        }
+
+        public void setCost(double cost) {
+            this.cost = cost;
         }
 
         public List<IntersectionModel> getIntersections() {
