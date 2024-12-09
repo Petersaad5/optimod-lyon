@@ -192,40 +192,4 @@ public class TSP {
         return bestMap;
     }
 
-    // test main method
-//    public static void main(String[] args) {
-//        // Create a delivery request
-//        IntersectionModel warehouse = new IntersectionModel(0L, 0, 0);
-//        IntersectionModel pickup1 = new IntersectionModel(1L, 1, 1);
-//        IntersectionModel delivery1 = new IntersectionModel(2L, 2, 2);
-//        IntersectionModel pickup2 = new IntersectionModel(3L, 3, 3);
-//        IntersectionModel delivery2 = new IntersectionModel(4L, 4, 4);
-//        IntersectionModel pickup3 = new IntersectionModel(5L, 5, 5);
-//        IntersectionModel delivery3 = new IntersectionModel(6L, 6, 6);
-//        DeliveryModel deliveryModel1 = new DeliveryModel(10, 5, delivery1, pickup1);
-//        DeliveryModel deliveryModel2 = new DeliveryModel(15, 5, delivery2, pickup2);
-//        DeliveryModel deliveryModel3 = new DeliveryModel(20, 5, delivery3, pickup3);
-//        List<DeliveryModel> deliveries = new ArrayList<>();
-//        deliveries.add(deliveryModel1);
-//        deliveries.add(deliveryModel2);
-//        deliveries.add(deliveryModel3);
-//        Date date = new Date(122, 11, 9);
-//        WarehouseModel warehouseM = new WarehouseModel(date, warehouse);
-//        DeliveryRequestModel deliveryRequest = new DeliveryRequestModel(1L, warehouseM, deliveries);
-//
-//        // Print delivery request
-//        System.out.println("Delivery request:");
-//        System.out.println(deliveryRequest);
-//
-//        // Generate permutations
-//        List<List<IntersectionModel>> permutations = generatePermutations(deliveryRequest);
-//
-//        // Print permutations
-//        System.out.println(permutations.size());
-//
-//        // Create a map
-//
-//
-//
-//    }
 }
