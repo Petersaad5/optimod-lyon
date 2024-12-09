@@ -7,6 +7,13 @@ import java.util.*;
 
 public class TSP {
 
+    // counter
+    private static int dijkstraCalls = 0;
+    private static int dijsktraCallsMemo = 0;
+
+    // memoization matrix for dijkstra
+    private static final Map<String, MapModel> memo = new HashMap<>();
+
     public static List<List<IntersectionModel>> generatePermutations(DeliveryRequestModel deliveryRequest) {
         List<DeliveryModel> deliveries = deliveryRequest.getDeliveries();
         List<List<IntersectionModel>> permutations = new ArrayList<>();
@@ -82,8 +89,15 @@ public class TSP {
         return allPoints.get(deliveryIndex - 1);
     }
 
-    // dijkstra algorithm
     public static MapModel dijkstra(MapModel map, IntersectionModel start, IntersectionModel end) {
+        String key = start.getId() + "-" + end.getId();
+        dijkstraCalls++;
+        if (memo.containsKey(key)) {
+            return memo.get(key);
+        }
+
+        dijsktraCallsMemo++;
+
         // Initialize the distance of each intersection to infinity
         Map<IntersectionModel, Double> distance = new HashMap<>();
         for (IntersectionModel intersection : map.getIntersections()) {
@@ -142,7 +156,9 @@ public class TSP {
             }
         }
         Collections.reverse(path);
-        return new MapModel(-1, path, roads);
+        MapModel result = new MapModel(-1, path, roads);
+        memo.put(key, result);
+        return result;
     }
 
     public static double calculateDistance(MapModel map) {
@@ -158,7 +174,7 @@ public class TSP {
         MapModel bestMap = new MapModel(-1, null, null);
         double bestDistance = Double.POSITIVE_INFINITY; // The distance of the best path found so far
         for (List<IntersectionModel> permutation : permutations) {
-            MapModel tempBestMap = new MapModel(1, null, null);
+            MapModel tempBestMap = new MapModel(1, new ArrayList<>() , new ArrayList<>());
             // add warehouse to the beginning and end of the permutation
             permutation.add(0, deliveryRequest.getWarehouse().getAddress());
             permutation.add(deliveryRequest.getWarehouse().getAddress());
@@ -179,6 +195,8 @@ public class TSP {
                 bestDistance = distance;
             }
         }
+        System.out.println("Dijkstra calls: " + dijkstraCalls);
+        System.out.println("Dijkstra calls with memoization: " + dijsktraCallsMemo);
         return bestMap;
     }
 
