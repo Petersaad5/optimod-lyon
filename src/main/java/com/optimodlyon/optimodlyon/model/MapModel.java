@@ -39,6 +39,15 @@ import java.util.List;
             this.roads = roads;
         }
 
+        public RoadModel getRoadByIntersections(IntersectionModel intersection1, IntersectionModel intersection2) {
+            for (RoadModel road : roads) {
+                if (road.containsIntersection(intersection1.getId()) && road.containsIntersection(intersection2.getId())) {
+                    return road;
+                }
+            }
+            return null;
+        }
+
         @Override
         public String toString() {
             return "MapModel{id=" + id + ", intersections=" + intersections + ", roads=" + roads + "}";

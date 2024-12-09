@@ -55,6 +55,14 @@ public class RoadModel {
         return false;
     }
 
+    public boolean isOrigin(Long id) {
+        return origin.getId().equals(id);
+    }
+
+    public boolean isDestination(Long id) {
+        return destination.getId().equals(id);
+    }
+
     @Override
     public String toString() {
         return "RoadModel{length=" + length + ", origin=" + origin + ", destination=" + destination + ", name='" + name + "'}";
