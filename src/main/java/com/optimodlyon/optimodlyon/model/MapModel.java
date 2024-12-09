@@ -51,7 +51,7 @@ import java.util.List;
 
         public RoadModel getRoadBetween(IntersectionModel origin, IntersectionModel destination) {
             for (RoadModel road : roads) {
-                if (road.getOrigin().equals(origin) && road.getDestination().equals(destination)) {
+                if (road.getOrigin().equals(origin) && road.getDestination().equals(destination)|| road.getOrigin().equals(destination) && road.getDestination().equals(origin)) {
                     return road;
                 }
             }
