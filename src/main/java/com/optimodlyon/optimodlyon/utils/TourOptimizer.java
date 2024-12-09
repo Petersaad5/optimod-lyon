@@ -7,10 +7,11 @@ import java.util.*;
 public class TourOptimizer {
 
     public static class Tour {
+        private Long id;
         private List<IntersectionModel> intersections;
         private List<RoadModel> roads;
 
-        public Tour(List<IntersectionModel> intersections, List<RoadModel> roads) {
+        public Tour(Long id,List<IntersectionModel> intersections, List<RoadModel> roads) {
             this.intersections = intersections;
             this.roads = roads;
         }
@@ -25,6 +26,7 @@ public class TourOptimizer {
     }
 
     public static Tour calculateOptimalTour(DeliveryRequestModel deliveryRequest, MapModel map) {
+
         List<IntersectionModel> tourIntersections = new ArrayList<>();
         List<RoadModel> tourRoads = new ArrayList<>();
         IntersectionModel warehouseLocation = deliveryRequest.getWarehouse().getAddress();
@@ -71,7 +73,7 @@ public class TourOptimizer {
         tourIntersections.add(warehouseLocation);
         tourRoads.addAll(returnPath);
 
-        return new Tour(tourIntersections, tourRoads);
+        return new Tour(1L, tourIntersections, tourRoads);
     }
 
     private static List<RoadModel> findShortestPath(IntersectionModel start, IntersectionModel end, MapModel map) {
