@@ -2,7 +2,9 @@ package com.optimodlyon.optimodlyon.service;
 
 import com.optimodlyon.optimodlyon.model.Data;
 import com.optimodlyon.optimodlyon.model.DeliveryRequestModel;
+import com.optimodlyon.optimodlyon.model.MapModel;
 import com.optimodlyon.optimodlyon.utils.Parser;
+import com.optimodlyon.optimodlyon.utils.TSP;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,7 +21,7 @@ public class DeliveryRequestService {
         this.dataService = dataService;
     }
 
-    public DeliveryRequestModel parseAndGetDeliveryRequestData(MultipartFile file) throws IOException {
+    public MapModel parseAndGetDeliveryRequestData(MultipartFile file) throws IOException {
         // Convert MultipartFile to File
         File convFile = new File(System.getProperty("java.io.tmpdir") + "/" + file.getOriginalFilename());
         file.transferTo(convFile);
@@ -28,7 +30,8 @@ public class DeliveryRequestService {
         Parser.parseDemande(convFile);
         Data data = Parser.data;
         dataService.setData(data);
-        return data.getDeliveryRequest();
+
+        return TSP.tsp(data.getDeliveryRequest(), data.getMap());
     }
 
 }
