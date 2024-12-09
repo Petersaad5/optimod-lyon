@@ -6,6 +6,7 @@ import com.optimodlyon.optimodlyon.service.DeliveryRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import com.optimodlyon.optimodlyon.model.MapModel;
 
 import java.io.IOException;
 
@@ -22,7 +23,7 @@ public class DeliveryRequestController {
     }
 
     @PostMapping("/parse")
-    public DeliveryRequestModel parseDeliveryRequestFile(@RequestParam("file") MultipartFile file) {
+    public MapModel parseDeliveryRequestFile(@RequestParam("file") MultipartFile file) {
         try {
             return deliveryRequestService.parseAndGetDeliveryRequestData(file);
         } catch (IOException e) {
