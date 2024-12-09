@@ -142,30 +142,23 @@ public class TSP {
             }
         }
         Collections.reverse(path);
-        return new MapModel(1, path, roads);
+        return new MapModel(-1, path, roads);
     }
 
-    public static double calculateDistance(List<IntersectionModel> path, MapModel map) {
+    public static double calculateDistance(MapModel map) {
         double distance = 0;
-        for (int i = 0; i < path.size() - 1; i++) {
-            IntersectionModel current = path.get(i);
-            IntersectionModel next = path.get(i + 1);
-            for (RoadModel road : map.getRoads()) {
-                if (road.containsIntersection(current.getId()) && road.containsIntersection(next.getId())) {
-                    distance += road.getLength();
-                    break;
-                }
-            }
+        for (RoadModel road : map.getRoads()) {
+            distance += road.getLength();
         }
         return distance;
     }
 
     public static MapModel tsp (DeliveryRequestModel deliveryRequest, MapModel map) {
         List<List<IntersectionModel>> permutations = generatePermutations(deliveryRequest);
-        List<IntersectionModel> bestPath = null; // The best path found so far
-        MapModel bestMap = new MapModel(1, bestPath, null);
+        MapModel bestMap = new MapModel(-1, null, null);
         double bestDistance = Double.POSITIVE_INFINITY; // The distance of the best path found so far
         for (List<IntersectionModel> permutation : permutations) {
+            MapModel tempBestMap = new MapModel(1, null, null);
             // add warehouse to the beginning and end of the permutation
             permutation.add(0, deliveryRequest.getWarehouse().getAddress());
             permutation.add(deliveryRequest.getWarehouse().getAddress());
@@ -173,18 +166,18 @@ public class TSP {
             for (int i = 0; i < permutation.size() - 1; i++) {
                 IntersectionModel current = permutation.get(i);
                 IntersectionModel next = permutation.get(i+1);
-                List<IntersectionModel> bestRoute = dijkstra(map, current, next).getIntersections();
-                distance += calculateDistance(bestRoute, map);
+                MapModel subMap = dijkstra(map, current, next);
+                tempBestMap.addMap(subMap);
+                distance += calculateDistance(subMap);
                 // heuristic
                 if (distance > bestDistance) {
                     break;
                 }
             }
             if(distance < bestDistance) {
+                bestMap = tempBestMap;
                 bestDistance = distance;
-                bestPath = permutation;
-                bestMap.setIntersections(bestPath);
-                bestMap.setRoads(dijkstra(map, bestPath.get(0), bestPath.get(1)).getRoads());}
+            }
         }
         return bestMap;
     }

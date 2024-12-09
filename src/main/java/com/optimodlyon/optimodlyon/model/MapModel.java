@@ -48,6 +48,15 @@ import java.util.List;
             return null;
         }
 
+        public void addMap(MapModel map) {
+            for (IntersectionModel intersection : map.getIntersections()) {
+                this.intersections.add(intersection);
+            }
+            for (RoadModel road : map.getRoads()) {
+                this.roads.add(road);
+            }
+        }
+
         @Override
         public String toString() {
             return "MapModel{id=" + id + ", intersections=" + intersections + ", roads=" + roads + "}";
