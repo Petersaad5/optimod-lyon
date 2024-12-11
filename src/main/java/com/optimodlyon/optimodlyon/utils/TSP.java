@@ -355,7 +355,7 @@ public class TSP {
         MapModel bestMap = new MapModel(-1, new ArrayList<>(), new ArrayList<>());
         double bestDistance = Double.POSITIVE_INFINITY; // The distance of the best path found so far
         for (List<IntersectionModel> permutation : permutations) {
-            MapModel tempBestMap = new MapModel(1, new ArrayList<>(), new ArrayList<>());
+            MapModel tempBestMap = new MapModel(-1, new ArrayList<>(), new ArrayList<>());
             // add warehouse to the beginning and end of the permutation
             permutation.add(0, deliveryRequest.getWarehouse().getAddress());
             permutation.add(deliveryRequest.getWarehouse().getAddress());

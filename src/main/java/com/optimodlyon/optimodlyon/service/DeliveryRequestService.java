@@ -33,9 +33,7 @@ public class DeliveryRequestService {
         Parser.parseDemande(convFile);
         Data data = Parser.data;
         dataService.setData(data);
-        List<Object> result = new ArrayList<>();
-        MapModel bestMap = TSP.tsp(data.getDeliveryRequest(), data.getMap());
-        return bestMap;
+        return TSP.tsp(data.getDeliveryRequest(), data.getMap());
     }
 
     public DeliveryRequestModel parseAndGetDeliveryRequest() throws IOException {

@@ -40,7 +40,7 @@ public class DeliveryRequestController {
             // return {MapModel, DeliveryRequestModel}
             return deliveryRequestService.parseAndGetDeliveryRequest();
         } catch (IOException e) {
-            throw new RuntimeException("Failed to get delivery request data", e);
+            throw new NullPointerException("Delivery request data is null");
         }
     }
 }
