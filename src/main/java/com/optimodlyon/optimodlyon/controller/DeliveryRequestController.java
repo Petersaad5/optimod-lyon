@@ -9,6 +9,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.optimodlyon.optimodlyon.model.MapModel;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/deliveryRequest")
@@ -22,12 +24,23 @@ public class DeliveryRequestController {
         this.deliveryRequestService = deliveryRequestService;
     }
 
-    @PostMapping("/parse")
+    @PostMapping("/parseAndGetBestRoute")
     public MapModel parseDeliveryRequestFile(@RequestParam("file") MultipartFile file) {
         try {
-            return deliveryRequestService.parseAndGetDeliveryRequestData(file);
+            // return {MapModel, DeliveryRequestModel}
+            return deliveryRequestService.parseAndGetBestRoute(file);
         } catch (IOException e) {
             throw new RuntimeException("Failed to parse XML file", e);
+        }
+    }
+
+    @PostMapping("/getDeliveryRequest")
+    public DeliveryRequestModel getDeliveryRequest() {
+        try {
+            // return {MapModel, DeliveryRequestModel}
+            return deliveryRequestService.parseAndGetDeliveryRequest();
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to get delivery request data", e);
         }
     }
 }

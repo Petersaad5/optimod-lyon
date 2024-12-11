@@ -8,6 +8,9 @@ import com.optimodlyon.optimodlyon.utils.TSP;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import java.util.List;
+import java.util.ArrayList;
+
 
 import java.io.File;
 import java.io.IOException;
@@ -21,7 +24,7 @@ public class DeliveryRequestService {
         this.dataService = dataService;
     }
 
-    public MapModel parseAndGetDeliveryRequestData(MultipartFile file) throws IOException {
+    public MapModel parseAndGetBestRoute(MultipartFile file) throws IOException {
         // Convert MultipartFile to File
         File convFile = new File(System.getProperty("java.io.tmpdir") + "/" + file.getOriginalFilename());
         file.transferTo(convFile);
@@ -30,8 +33,17 @@ public class DeliveryRequestService {
         Parser.parseDemande(convFile);
         Data data = Parser.data;
         dataService.setData(data);
+        List<Object> result = new ArrayList<>();
+        MapModel bestMap = TSP.tsp(data.getDeliveryRequest(), data.getMap());
+        return bestMap;
+    }
 
-        return TSP.tsp(data.getDeliveryRequest(), data.getMap());
+    public DeliveryRequestModel parseAndGetDeliveryRequest() throws IOException {
+        // check if Data.getDeliveryRequest() is null
+        if (dataService.getData().getDeliveryRequest() == null) {
+            throw new RuntimeException("Delivery request data is null");
+        }
+        return dataService.getData().getDeliveryRequest();
     }
 
 }
