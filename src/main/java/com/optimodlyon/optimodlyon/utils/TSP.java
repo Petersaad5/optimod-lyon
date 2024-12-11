@@ -170,6 +170,8 @@ public class TSP {
     }
 
     public static MapModel tsp (DeliveryRequestModel deliveryRequest, MapModel map) {
+        // calculate the time taken for the tsp algorithm
+        long startTime = System.currentTimeMillis();
         List<List<IntersectionModel>> permutations = generatePermutations(deliveryRequest);
         MapModel bestMap = new MapModel(-1, null, null);
         double bestDistance = Double.POSITIVE_INFINITY; // The distance of the best path found so far
@@ -197,6 +199,7 @@ public class TSP {
         }
         System.out.println("Dijkstra calls: " + dijkstraCalls);
         System.out.println("Dijkstra calls with memoization: " + dijsktraCallsMemo);
+        System.out.println("Time taken for TSP: " + (System.currentTimeMillis() - startTime) + "ms");
         return bestMap;
     }
 
