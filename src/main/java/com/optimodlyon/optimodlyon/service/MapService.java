@@ -20,13 +20,15 @@ public class MapService {
     }
 
     public MapModel parseAndGetMapData(MultipartFile file) throws IOException {
+        // init map because a new map is parsed
+        dataService.initData();
+
         // Convert MultipartFile to File
         File convFile = new File(System.getProperty("java.io.tmpdir") + "/" + file.getOriginalFilename());
         file.transferTo(convFile);
 
         // Parse the uploaded XML file
-        Parser.parsePlan(convFile);
-        Data data = Parser.data;
+        Data data = Parser.parsePlan(convFile, dataService.getData());
         dataService.setData(data);
         return data.getMap();
     }

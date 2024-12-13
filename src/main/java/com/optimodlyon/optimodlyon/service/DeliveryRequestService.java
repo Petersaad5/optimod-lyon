@@ -1,19 +1,20 @@
 package com.optimodlyon.optimodlyon.service;
 
-import com.optimodlyon.optimodlyon.model.Data;
-import com.optimodlyon.optimodlyon.model.DeliveryRequestModel;
-import com.optimodlyon.optimodlyon.model.MapModel;
+import com.optimodlyon.optimodlyon.model.*;
 import com.optimodlyon.optimodlyon.utils.Parser;
 import com.optimodlyon.optimodlyon.utils.TSP;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 
 @Service
 public class DeliveryRequestService {
@@ -24,24 +25,29 @@ public class DeliveryRequestService {
         this.dataService = dataService;
     }
 
-    public MapModel parseAndGetBestRoute(MultipartFile file) throws IOException {
+    public List<TourModel> parseAndGetBestRoutePerCourier(MultipartFile file, List<CourierModel> couriers, List<DeliveryModel> deliveryAdded) throws IOException {
         // Convert MultipartFile to File
         File convFile = new File(System.getProperty("java.io.tmpdir") + "/" + file.getOriginalFilename());
         file.transferTo(convFile);
 
         // Parse the uploaded XML file
-        Parser.parseDemande(convFile);
-        Data data = Parser.data;
-        dataService.setData(data);
-        return TSP.tsp(data.getDeliveryRequest(), data.getMap());
-    }
-
-    public DeliveryRequestModel parseAndGetDeliveryRequest() throws IOException {
-        // check if Data.getDeliveryRequest() is null
-        if (dataService.getData().getDeliveryRequest() == null) {
-            throw new RuntimeException("Delivery request data is null");
+        List<TourModel> toursWithoutTSP = Parser.parseDemande(convFile, couriers, deliveryAdded);
+        for (int i = 0; i < couriers.size(); i++) {
+            toursWithoutTSP.get(i).setRoute(TSP.tsp(toursWithoutTSP.get(i).getDeliveryRequest(), dataService.getData().getMap()));
         }
-        return dataService.getData().getDeliveryRequest();
+        // TSP Done in toursWithoutTSP
+        return toursWithoutTSP;
     }
 
+    public void saveTour(TourModel tour) {
+        Data data = dataService.getData();
+        // set the tour id
+        tour.setId((long) data.getTours().size());
+        data.getTours().add(tour);
+        dataService.setData(data);
+    }
+
+    public List<TourModel> restoreTours() {
+        return dataService.getData().getTours();
+    }
 }

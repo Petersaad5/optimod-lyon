@@ -1,17 +1,18 @@
 package com.optimodlyon.optimodlyon.model;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class Data {
     static MapModel map;
     List<IntersectionModel> intersections;
     List<RoadModel> roads;
     List <CourierModel> couriers;
-    List <DeliveryModel> deliveries;
-    static DeliveryRequestModel deliveryRequest;
-    List <WarehouseModel> warehouses;
+    List<TourModel> tours;
 
 
     public Data() {
+        tours = new ArrayList<>();
     }
 
     public Data(MapModel map, List<IntersectionModel> intersections, List<RoadModel> roads) {
@@ -52,11 +53,13 @@ public class Data {
         this.couriers = couriers;
     }
 
-    public static DeliveryRequestModel getDeliveryRequest() {
-        return deliveryRequest;
+    public void addTour(TourModel tour) {
+        this.tours.add(tour);
     }
 
-    public void setDeliveryRequest(DeliveryRequestModel deliveryRequest) {
-        this.deliveryRequest = deliveryRequest;
+    public List<TourModel> getTours() {
+        return tours;
     }
+
+
 }

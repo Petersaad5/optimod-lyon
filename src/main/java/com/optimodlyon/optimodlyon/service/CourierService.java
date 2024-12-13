@@ -31,7 +31,7 @@ public class CourierService {
 
         List<CourierModel> couriers = new ArrayList<>();
         for (int i = 0; i < count && i < nameList.size(); i++) {
-            couriers.add(new CourierModel((long) i, nameList.get(i), new ArrayList<>()));
+            couriers.add(new CourierModel((long) i, nameList.get(i)));
         }
         Data data = dataService.getData();
         data.setCouriers(couriers);

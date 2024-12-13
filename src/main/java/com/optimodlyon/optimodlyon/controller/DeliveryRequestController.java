@@ -1,12 +1,12 @@
 package com.optimodlyon.optimodlyon.controller;
 
-import com.optimodlyon.optimodlyon.model.Data;
-import com.optimodlyon.optimodlyon.model.DeliveryRequestModel;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.optimodlyon.optimodlyon.model.*;
 import com.optimodlyon.optimodlyon.service.DeliveryRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import com.optimodlyon.optimodlyon.model.MapModel;
 
 import java.io.IOException;
 import java.util.List;
@@ -24,23 +24,38 @@ public class DeliveryRequestController {
         this.deliveryRequestService = deliveryRequestService;
     }
 
-    @PostMapping("/parseAndGetBestRoute")
-    public MapModel parseDeliveryRequestFile(@RequestParam("file") MultipartFile file) {
+    @PostMapping("/parseAndGetBestRoutePerCourier")
+    public List<TourModel> parseDeliveryRequestFile(@RequestParam("file") MultipartFile file,
+                                             @RequestParam("couriers") String couriersJson,
+                                             @RequestParam("deliveriesAdded") String deliveriesAddedJson) {
+        ObjectMapper objectMapper = new ObjectMapper();
         try {
+            List<CourierModel> couriers = objectMapper.readValue(couriersJson, new TypeReference<List<CourierModel>>() {});
+            List<DeliveryModel> deliveriesAdded = objectMapper.readValue(deliveriesAddedJson, new TypeReference<List<DeliveryModel>>() {});
+
             // return {MapModel, DeliveryRequestModel}
-            return deliveryRequestService.parseAndGetBestRoute(file);
+            System.out.println("Couriers: " + couriers.get(0));
+            System.out.println("Deliveries added: " + deliveriesAdded.get(0));
+            return deliveryRequestService.parseAndGetBestRoutePerCourier(file, couriers, deliveriesAdded);
         } catch (IOException e) {
             throw new RuntimeException("Failed to parse XML file", e);
         }
     }
 
-    @PostMapping("/getDeliveryRequest")
-    public DeliveryRequestModel getDeliveryRequest() {
+    @PostMapping("/saveTour")
+    public void saveTour(@RequestParam("tour") String tourJson) {
+        ObjectMapper objectMapper = new ObjectMapper();
         try {
-            // return {MapModel, DeliveryRequestModel}
-            return deliveryRequestService.parseAndGetDeliveryRequest();
+            TourModel tour = objectMapper.readValue(tourJson, new TypeReference<TourModel>() {});
+            deliveryRequestService.saveTour(tour);
         } catch (IOException e) {
-            throw new NullPointerException("Delivery request data is null");
+            throw new RuntimeException("Failed to save tour", e);
         }
     }
+
+    @GetMapping("/restoreTours")
+    public List<TourModel> restoreTours() {
+        return deliveryRequestService.restoreTours();
+    }
+
 }

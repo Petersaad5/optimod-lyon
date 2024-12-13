@@ -1,5 +1,8 @@
 package com.optimodlyon.optimodlyon.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties({"deliveryDuration", "pickupDuration"})
 public class DeliveryModel {
     private int deliveryDuration;
     private int pickupDuration;
@@ -46,5 +49,9 @@ public class DeliveryModel {
 
     public void setOrigin(IntersectionModel origin) {
         this.origin = origin;
+    }
+
+    public String toString() {
+        return "DeliveryModel{deliveryDuration=" + deliveryDuration + ", pickupDuration=" + pickupDuration + ", destination=" + destination + ", origin=" + origin + "}";
     }
 }

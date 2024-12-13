@@ -6,14 +6,17 @@ public class DeliveryRequestModel {
     private Long id;
     private WarehouseModel warehouse;
     private List<DeliveryModel> deliveries;
+    private CourierModel courier;
 
     public DeliveryRequestModel() {
     }
 
-    public DeliveryRequestModel(Long id, WarehouseModel warehouse, List<DeliveryModel> deliveries) {
+    public DeliveryRequestModel(Long id, WarehouseModel warehouse, List<DeliveryModel> deliveries, CourierModel courier) {
         this.id = id;
         this.warehouse = warehouse;
         this.deliveries = deliveries;
+        this.courier = courier;
+
     }
 
     public Long getId() {
@@ -38,5 +41,13 @@ public class DeliveryRequestModel {
 
     public void setDeliveries(List<DeliveryModel> deliveries) {
         this.deliveries = deliveries;
+    }
+
+    public void setCourier(CourierModel courier) {
+        this.courier = courier;
+    }
+
+    public CourierModel getCourier() {
+        return courier;
     }
 }

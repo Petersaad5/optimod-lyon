@@ -11,10 +11,8 @@ import java.util.*;
 public class Parser {
     public static Map<Long, IntersectionModel> intersectionMap = new HashMap<>();
 
-    // Create global data object to store the parsed data
-    public static Data data = new Data();
 
-    public static void parsePlan(File file) {
+    public static Data parsePlan(File file, Data data) {
         List<IntersectionModel> intersections = new ArrayList<>();
         List<RoadModel> roads = new ArrayList<>();
 
@@ -66,8 +64,10 @@ public class Parser {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return data;
     }
-    public static void parseDemande(File file) {
+    public static List<TourModel> parseDemande(File file, List<CourierModel> couriers, List<DeliveryModel> deliveriesAdded) {
+        List<TourModel> toursWithoutTSP = new ArrayList<>();
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
@@ -100,11 +100,16 @@ public class Parser {
                 }
             }
 
-            // Create the DeliveryRequestModel object
-            DeliveryRequestModel deliveryRequest = new DeliveryRequestModel();
-            deliveryRequest.setWarehouse(warehouse);
-            deliveryRequest.setId(1L); //TODO: set the id so its not null
-            deliveryRequest.setDeliveries(new ArrayList<>());
+            for(int i = 0; i < couriers.size(); i++) {
+                // Create the DeliveryRequestModel object
+                TourModel tour = new TourModel();
+                DeliveryRequestModel deliveryRequest = new DeliveryRequestModel();
+                deliveryRequest.setWarehouse(warehouse);
+                deliveryRequest.setDeliveries(new ArrayList<>());
+                deliveryRequest.setCourier(couriers.get(i));
+                tour.setDeliveryRequest(deliveryRequest);
+                toursWithoutTSP.add(tour);
+            }
 
             // Parse <livraison> elements
             NodeList deliveryList = document.getElementsByTagName("livraison");
@@ -132,15 +137,20 @@ public class Parser {
 
                     // Create the DeliveryModel object
                     DeliveryModel delivery = new DeliveryModel(dureeLivraison, dureeEnlevement, destinationIntersection, originIntersection);
-                    deliveryRequest.getDeliveries().add(delivery);
+                    int indexCourier = (i % couriers.size());
+                    toursWithoutTSP.get(indexCourier).getDeliveryRequest().getDeliveries().add(delivery);
                 }
             }
 
-            // Set the parsed delivery request in the data object
-            data.setDeliveryRequest(deliveryRequest);
+            for(int i = 0; i < deliveriesAdded.size(); i++) {
+                int indexCourier = ((i+deliveryList.getLength() - 1) % couriers.size());
+                toursWithoutTSP.get(indexCourier).getDeliveryRequest().getDeliveries().add(deliveriesAdded.get(i));
+            }
+
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return toursWithoutTSP;
     }
 }
