@@ -34,8 +34,6 @@ public class DeliveryRequestController {
             List<DeliveryModel> deliveriesAdded = objectMapper.readValue(deliveriesAddedJson, new TypeReference<List<DeliveryModel>>() {});
 
             // return {MapModel, DeliveryRequestModel}
-            System.out.println("Couriers: " + couriers.get(0));
-            System.out.println("Deliveries added: " + deliveriesAdded.get(0));
             return deliveryRequestService.parseAndGetBestRoutePerCourier(file, couriers, deliveriesAdded);
         } catch (IOException e) {
             throw new RuntimeException("Failed to parse XML file", e);
