@@ -1,7 +1,11 @@
 package com.optimodlyon.optimodlyon.service;
 
+import com.optimodlyon.optimodlyon.model.CourierModel;
 import com.optimodlyon.optimodlyon.model.Data;
+import com.optimodlyon.optimodlyon.model.TourModel;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class DataService {
@@ -11,8 +15,10 @@ public class DataService {
         this.data = new Data();
     }
 
-    public void initData() {
+    public void initData(List<TourModel> tours, List<CourierModel> couriers) {
         this.data = new Data();
+        this.data.setTours(tours);
+        this.data.setCouriers(couriers);
     }
 
     public Data getData() {

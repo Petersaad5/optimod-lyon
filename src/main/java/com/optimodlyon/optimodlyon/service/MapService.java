@@ -21,7 +21,7 @@ public class MapService {
 
     public MapModel parseAndGetMapData(MultipartFile file) throws IOException {
         // init map because a new map is parsed
-        dataService.initData();
+        dataService.initData(dataService.getData().getTours(), dataService.getData().getCouriers());
 
         // Convert MultipartFile to File
         File convFile = new File(System.getProperty("java.io.tmpdir") + "/" + file.getOriginalFilename());

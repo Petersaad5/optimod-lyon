@@ -7,7 +7,7 @@ public class Data {
     static MapModel map;
     List<IntersectionModel> intersections;
     List<RoadModel> roads;
-    List <CourierModel> couriers;
+    List<CourierModel> couriers;
     List<TourModel> tours;
 
 
@@ -59,6 +59,10 @@ public class Data {
 
     public List<TourModel> getTours() {
         return tours;
+    }
+
+    public void setTours(List<TourModel> tours) {
+        this.tours = tours;
     }
 
 
