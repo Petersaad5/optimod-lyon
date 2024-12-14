@@ -22,13 +22,10 @@ public class DeliveryRequestService {
         this.dataService = dataService;
     }
 
-    public List<Tour> parseAndGetBestRoutePerCourier(MultipartFile file, List<Courier> couriers, List<Delivery> deliveryAdded) throws IOException {
-        // Convert MultipartFile to File
-        File convFile = new File(System.getProperty("java.io.tmpdir") + "/" + file.getOriginalFilename());
-        file.transferTo(convFile);
+    public List<Tour> parseAndGetBestRoutePerCourier(File file, List<Courier> couriers, List<Delivery> deliveryAdded) throws IOException {
 
         // Parse the uploaded XML file
-        List<Tour> toursWithoutTSP = Parser.parseDemande(convFile, couriers, deliveryAdded);
+        List<Tour> toursWithoutTSP = Parser.parseDemande(file, couriers, deliveryAdded);
         for (int i = 0; i < couriers.size(); i++) {
             toursWithoutTSP.get(i).setRoute(TSP.tsp(toursWithoutTSP.get(i).getDeliveryRequest(), dataService.getData().getMap()));
         }

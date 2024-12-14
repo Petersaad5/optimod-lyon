@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Data {
-    static Map map;
+    Map map;
     List<Intersection> intersections;
     List<Road> roads;
     List<Courier> couriers;
@@ -12,6 +12,10 @@ public class Data {
 
     public Data() {
         tours = new ArrayList<>();
+        couriers = new ArrayList<>();
+        intersections = new ArrayList<>();
+        roads = new ArrayList<>();
+        map = new Map();
     }
 
     public Data(Map map, List<Intersection> intersections, List<Road> roads) {
@@ -20,8 +24,8 @@ public class Data {
         this.roads = roads;
     }
 
-    public static Map getMap() {
-        return map;
+    public Map getMap() {
+        return this.map;
     }
 
     public void setMap(Map map) {

@@ -1,5 +1,7 @@
 package com.optimodlyon.optimodlyon.model;
 
+import java.util.Objects;
+
 public class Intersection {
     Long id;
     double latitude;
@@ -47,6 +49,15 @@ public class Intersection {
 
     @Override
     public String toString() {
-        return "IntersectionModel{id=" + id + ", latitude=" + latitude + ", longitude=" + longitude + "}";
+        return "Intersection{id=" + id + ", latitude=" + latitude + ", longitude=" + longitude + "}";
+    }
+
+    // method overriding equals()
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Intersection that = (Intersection) o;
+        return id.equals(that.id);
     }
 }

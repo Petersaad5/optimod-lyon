@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -34,8 +35,10 @@ public class DeliveryRequestController {
             List<Courier> couriers = objectMapper.readValue(couriersJson, new TypeReference<List<Courier>>() {});
             List<Delivery> deliveriesAdded = objectMapper.readValue(deliveriesAddedJson, new TypeReference<List<Delivery>>() {});
 
-            // return {MapModel, DeliveryRequestModel}
-            return deliveryRequestService.parseAndGetBestRoutePerCourier(file, couriers, deliveriesAdded);
+            // Convert MultipartFile to File
+            File convFile = new File(System.getProperty("java.io.tmpdir") + "/" + file.getOriginalFilename());
+            file.transferTo(convFile);
+            return deliveryRequestService.parseAndGetBestRoutePerCourier(convFile, couriers, deliveriesAdded);
         } catch (IOException e) {
             throw new RuntimeException("Failed to parse XML file", e);
         }
