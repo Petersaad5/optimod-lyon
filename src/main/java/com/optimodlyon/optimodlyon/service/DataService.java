@@ -21,6 +21,10 @@ public class DataService {
         this.data.setCouriers(couriers);
     }
 
+    public void initData() {
+        this.data = new Data();
+    }
+
     public Data getData() {
         return data;
     }
