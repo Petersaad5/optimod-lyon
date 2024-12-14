@@ -1,15 +1,15 @@
 package com.optimodlyon.optimodlyon.model;
 
-public class RoadModel {
+public class Road {
     double length;
-    IntersectionModel origin;
-    IntersectionModel destination;
+    Intersection origin;
+    Intersection destination;
     String name;
 
-    public RoadModel() {
+    public Road() {
     }
 
-    public RoadModel(double length, IntersectionModel origin, IntersectionModel destination, String name) {
+    public Road(double length, Intersection origin, Intersection destination, String name) {
         this.length = length;
         this.origin = origin;
         this.destination = destination;
@@ -24,19 +24,19 @@ public class RoadModel {
         this.length = length;
     }
 
-    public IntersectionModel getOrigin() {
+    public Intersection getOrigin() {
         return origin;
     }
 
-    public void setOrigin(IntersectionModel origin) {
+    public void setOrigin(Intersection origin) {
         this.origin = origin;
     }
 
-    public IntersectionModel getDestination() {
+    public Intersection getDestination() {
         return destination;
     }
 
-    public void setDestination(IntersectionModel destination) {
+    public void setDestination(Intersection destination) {
         this.destination = destination;
     }
 

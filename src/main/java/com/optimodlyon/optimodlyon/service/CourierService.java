@@ -1,6 +1,6 @@
 package com.optimodlyon.optimodlyon.service;
 
-import com.optimodlyon.optimodlyon.model.CourierModel;
+import com.optimodlyon.optimodlyon.model.Courier;
 import com.optimodlyon.optimodlyon.model.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,13 +25,13 @@ public class CourierService {
         this.dataService = dataService;
     }
 
-    public List<CourierModel> generateRandomCouriers(int count) {
+    public List<Courier> generateRandomCouriers(int count) {
         List<String> nameList = new ArrayList<>(List.of(NAMES));
         Collections.shuffle(nameList);
 
-        List<CourierModel> couriers = new ArrayList<>();
+        List<Courier> couriers = new ArrayList<>();
         for (int i = 0; i < count && i < nameList.size(); i++) {
-            couriers.add(new CourierModel((long) i, nameList.get(i)));
+            couriers.add(new Courier((long) i, nameList.get(i)));
         }
         Data data = dataService.getData();
         data.setCouriers(couriers);

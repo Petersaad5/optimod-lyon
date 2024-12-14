@@ -1,14 +1,14 @@
 package com.optimodlyon.optimodlyon.model;
 
-public class TourModel {
+public class Tour {
     private Long id;
-    private MapModel route;
-    private DeliveryRequestModel deliveryRequest;
+    private Map route;
+    private DeliveryRequest deliveryRequest;
 
-    public TourModel() {
+    public Tour() {
     }
 
-    public TourModel(Long id, MapModel route, DeliveryRequestModel deliveryRequest) {
+    public Tour(Long id, Map route, DeliveryRequest deliveryRequest) {
         this.id = id;
         this.route = route;
         this.deliveryRequest = deliveryRequest;
@@ -22,19 +22,19 @@ public class TourModel {
         this.id = id;
     }
 
-    public MapModel getRoute() {
+    public Map getRoute() {
         return route;
     }
 
-    public void setRoute(MapModel route) {
+    public void setRoute(Map route) {
         this.route = route;
     }
 
-    public DeliveryRequestModel getDeliveryRequest() {
+    public DeliveryRequest getDeliveryRequest() {
         return deliveryRequest;
     }
 
-    public void setDeliveryRequest(DeliveryRequestModel deliveryRequest) {
+    public void setDeliveryRequest(DeliveryRequest deliveryRequest) {
         this.deliveryRequest = deliveryRequest;
     }
 

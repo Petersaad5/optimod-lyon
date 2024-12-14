@@ -1,8 +1,8 @@
 package com.optimodlyon.optimodlyon.service;
 
-import com.optimodlyon.optimodlyon.model.CourierModel;
+import com.optimodlyon.optimodlyon.model.Courier;
 import com.optimodlyon.optimodlyon.model.Data;
-import com.optimodlyon.optimodlyon.model.TourModel;
+import com.optimodlyon.optimodlyon.model.Tour;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,7 +15,7 @@ public class DataService {
         this.data = new Data();
     }
 
-    public void initData(List<TourModel> tours, List<CourierModel> couriers) {
+    public void initData(List<Tour> tours, List<Courier> couriers) {
         this.data = new Data();
         this.data.setTours(tours);
         this.data.setCouriers(couriers);

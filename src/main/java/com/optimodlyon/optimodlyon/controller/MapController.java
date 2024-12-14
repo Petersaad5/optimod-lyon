@@ -1,6 +1,6 @@
 package com.optimodlyon.optimodlyon.controller;
 
-import com.optimodlyon.optimodlyon.model.MapModel;
+import com.optimodlyon.optimodlyon.model.Map;
 import com.optimodlyon.optimodlyon.service.MapService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,12 +21,12 @@ public class MapController {
     }
 
     @GetMapping
-    public MapModel getMapData() {
+    public Map getMapData() {
         return mapService.getMapData();
     }
 
     @PostMapping("/parse")
-    public MapModel parseMapFile(@RequestParam("file") MultipartFile file) {
+    public Map parseMapFile(@RequestParam("file") MultipartFile file) {
         try {
             return mapService.parseAndGetMapData(file);
         } catch (IOException e) {

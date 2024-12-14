@@ -7,14 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.ArrayList;
 
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Map;
 
 @Service
 public class DeliveryRequestService {
@@ -25,13 +22,13 @@ public class DeliveryRequestService {
         this.dataService = dataService;
     }
 
-    public List<TourModel> parseAndGetBestRoutePerCourier(MultipartFile file, List<CourierModel> couriers, List<DeliveryModel> deliveryAdded) throws IOException {
+    public List<Tour> parseAndGetBestRoutePerCourier(MultipartFile file, List<Courier> couriers, List<Delivery> deliveryAdded) throws IOException {
         // Convert MultipartFile to File
         File convFile = new File(System.getProperty("java.io.tmpdir") + "/" + file.getOriginalFilename());
         file.transferTo(convFile);
 
         // Parse the uploaded XML file
-        List<TourModel> toursWithoutTSP = Parser.parseDemande(convFile, couriers, deliveryAdded);
+        List<Tour> toursWithoutTSP = Parser.parseDemande(convFile, couriers, deliveryAdded);
         for (int i = 0; i < couriers.size(); i++) {
             toursWithoutTSP.get(i).setRoute(TSP.tsp(toursWithoutTSP.get(i).getDeliveryRequest(), dataService.getData().getMap()));
         }
@@ -39,7 +36,7 @@ public class DeliveryRequestService {
         return toursWithoutTSP;
     }
 
-    public void saveTour(TourModel tour) {
+    public void saveTour(Tour tour) {
         Data data = dataService.getData();
         // set the tour id
         tour.setId((long) data.getTours().size());
@@ -47,7 +44,7 @@ public class DeliveryRequestService {
         dataService.setData(data);
     }
 
-    public List<TourModel> restoreTours() {
+    public List<Tour> restoreTours() {
         return dataService.getData().getTours();
     }
 }

@@ -1,15 +1,15 @@
 package com.optimodlyon.optimodlyon.model;
 import java.util.List;
 
-    public class MapModel {
+    public class Map {
         int id;
-        List<IntersectionModel> intersections;
-        List<RoadModel> roads;
+        List<Intersection> intersections;
+        List<Road> roads;
 
-        public MapModel() {
+        public Map() {
         }
 
-        public MapModel(int id, List<IntersectionModel> intersections, List<RoadModel> roads) {
+        public Map(int id, List<Intersection> intersections, List<Road> roads) {
             this.id = id;
             this.intersections = intersections;
             this.roads = roads;
@@ -23,24 +23,24 @@ import java.util.List;
             this.id = id;
         }
 
-        public List<IntersectionModel> getIntersections() {
+        public List<Intersection> getIntersections() {
             return intersections;
         }
 
-        public void setIntersections(List<IntersectionModel> intersections) {
+        public void setIntersections(List<Intersection> intersections) {
             this.intersections = intersections;
         }
 
-        public List<RoadModel> getRoads() {
+        public List<Road> getRoads() {
             return roads;
         }
 
-        public void setRoads(List<RoadModel> roads) {
+        public void setRoads(List<Road> roads) {
             this.roads = roads;
         }
 
-        public RoadModel getRoadByIntersections(IntersectionModel intersection1, IntersectionModel intersection2) {
-            for (RoadModel road : roads) {
+        public Road getRoadByIntersections(Intersection intersection1, Intersection intersection2) {
+            for (Road road : roads) {
                 if (road.containsIntersection(intersection1.getId()) && road.containsIntersection(intersection2.getId())) {
                     return road;
                 }
@@ -48,11 +48,11 @@ import java.util.List;
             return null;
         }
 
-        public void addMap(MapModel map) {
-            for (IntersectionModel intersection : map.getIntersections()) {
+        public void addMap(Map map) {
+            for (Intersection intersection : map.getIntersections()) {
                 this.intersections.add(intersection);
             }
-            for (RoadModel road : map.getRoads()) {
+            for (Road road : map.getRoads()) {
                 this.roads.add(road);
             }
         }

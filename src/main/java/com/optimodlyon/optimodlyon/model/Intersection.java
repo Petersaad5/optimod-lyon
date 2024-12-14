@@ -1,15 +1,15 @@
 package com.optimodlyon.optimodlyon.model;
 
-public class IntersectionModel {
+public class Intersection {
     Long id;
     double latitude;
     double longitude;
     // Default constructor
-    public IntersectionModel() {
+    public Intersection() {
     }
 
     // Parameterized constructor
-    public IntersectionModel(Long id, double latitude, double longitude) {
+    public Intersection(Long id, double latitude, double longitude) {
         this.id = id;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -28,7 +28,7 @@ public class IntersectionModel {
         return longitude;
     }
 
-    public IntersectionModel getIntersectionById(Long id) {
+    public Intersection getIntersectionById(Long id) {
         return this;
     }
 

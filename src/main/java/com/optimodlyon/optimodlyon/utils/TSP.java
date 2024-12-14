@@ -1,8 +1,8 @@
 package com.optimodlyon.optimodlyon.utils;
 
 import com.optimodlyon.optimodlyon.model.*;
+import com.optimodlyon.optimodlyon.model.Map;
 
-import java.text.DateFormat;
 import java.util.*;
 
 public class TSP {
@@ -13,9 +13,9 @@ public class TSP {
 
     // memoization matrix for dijkstra with LRU cache
     private static final int MAX_MEMO_SIZE = 1000;
-    private static final Map<String, MapModel> memo = new LinkedHashMap<String, MapModel>(MAX_MEMO_SIZE, 0.75f, true) {
+    private static final java.util.Map<String, Map> memo = new LinkedHashMap<String, Map>(MAX_MEMO_SIZE, 0.75f, true) {
         @Override
-        protected boolean removeEldestEntry(Map.Entry<String, MapModel> eldest) {
+        protected boolean removeEldestEntry(java.util.Map.Entry<String, Map> eldest) {
             return size() > MAX_MEMO_SIZE;
         }
     };
@@ -37,27 +37,27 @@ public class TSP {
 //        return permutations;
 //    }
 
-    public static List<List<IntersectionModel>> generatePertinentPermutations(DeliveryRequestModel deliveryRequest) {
-        List<DeliveryModel> deliveries = deliveryRequest.getDeliveries();
-        List<List<IntersectionModel>> permutations = new ArrayList<>();
-        IntersectionModel warehouseIntersection = deliveryRequest.getWarehouse().getAddress();
+    public static List<List<Intersection>> generatePertinentPermutations(DeliveryRequest deliveryRequest) {
+        List<Delivery> deliveries = deliveryRequest.getDeliveries();
+        List<List<Intersection>> permutations = new ArrayList<>();
+        Intersection warehouseIntersection = deliveryRequest.getWarehouse().getAddress();
 
         // Step 1: Create a list of pickup and delivery pairs
-        List<IntersectionModel> allPoints = new ArrayList<>();
-        for (DeliveryModel delivery : deliveries) {
+        List<Intersection> allPoints = new ArrayList<>();
+        for (Delivery delivery : deliveries) {
             allPoints.add(delivery.getOrigin()); // Pickup point
             allPoints.add(delivery.getDestination()); // Delivery point
         }
 
         // Step 2: Generate permutations using nearest neighbor heuristic
-        List<IntersectionModel> currentPermutation = new ArrayList<>();
-        Set<IntersectionModel> usedPoints = new HashSet<>();
+        List<Intersection> currentPermutation = new ArrayList<>();
+        Set<Intersection> usedPoints = new HashSet<>();
         currentPermutation.add(warehouseIntersection);
         usedPoints.add(warehouseIntersection);
 
         while (currentPermutation.size() < allPoints.size() + 1) {
-            IntersectionModel lastPoint = currentPermutation.get(currentPermutation.size() - 1);
-            IntersectionModel nextPoint = findNearestNeighbor(lastPoint, allPoints, usedPoints);
+            Intersection lastPoint = currentPermutation.get(currentPermutation.size() - 1);
+            Intersection nextPoint = findNearestNeighbor(lastPoint, allPoints, usedPoints);
             if (nextPoint != null) {
                 currentPermutation.add(nextPoint);
                 usedPoints.add(nextPoint);
@@ -73,17 +73,17 @@ public class TSP {
         return permutations;
     }
 
-    private static double calculateDistancePermutation(IntersectionModel a, IntersectionModel b) {
+    private static double calculateDistancePermutation(Intersection a, Intersection b) {
         double dx = a.getLongitude() - b.getLongitude();
         double dy = a.getLatitude() - b.getLatitude();
         return Math.sqrt(dx * dx + dy * dy);
     }
 
-    private static IntersectionModel findNearestNeighbor(IntersectionModel current, List<IntersectionModel> allPoints, Set<IntersectionModel> usedPoints) {
-        IntersectionModel nearestNeighbor = null;
+    private static Intersection findNearestNeighbor(Intersection current, List<Intersection> allPoints, Set<Intersection> usedPoints) {
+        Intersection nearestNeighbor = null;
         double shortestDistance = Double.POSITIVE_INFINITY;
 
-        for (IntersectionModel point : allPoints) {
+        for (Intersection point : allPoints) {
             if (!usedPoints.contains(point)) {
                 double distance = calculateDistancePermutation(current, point);
                 if (distance < shortestDistance) {
@@ -97,11 +97,11 @@ public class TSP {
     }
 
     private static void backtrack(
-            List<List<IntersectionModel>> permutations,
-            List<IntersectionModel> currentPermutation,
-            List<IntersectionModel> allPoints,
-            Set<IntersectionModel> usedPickups,
-            Set<IntersectionModel> usedPoints
+            List<List<Intersection>> permutations,
+            List<Intersection> currentPermutation,
+            List<Intersection> allPoints,
+            Set<Intersection> usedPickups,
+            Set<Intersection> usedPoints
     ) {
         // Base case: when the current permutation includes all points
         if (currentPermutation.size() == allPoints.size()) {
@@ -109,7 +109,7 @@ public class TSP {
             return;
         }
 
-        for (IntersectionModel point : allPoints) {
+        for (Intersection point : allPoints) {
             // If already used, skip
             if (usedPoints.contains(point)) continue;
 
@@ -138,24 +138,24 @@ public class TSP {
         }
     }
 
-    private static boolean isPickupPoint(IntersectionModel point, List<IntersectionModel> allPoints) {
+    private static boolean isPickupPoint(Intersection point, List<Intersection> allPoints) {
         // A point is a pickup point if it appears at an even index (0, 2, 4, ...)
         return allPoints.indexOf(point) % 2 == 0;
     }
 
-    private static boolean isDeliveryPoint(IntersectionModel point, List<IntersectionModel> allPoints) {
+    private static boolean isDeliveryPoint(Intersection point, List<Intersection> allPoints) {
         // A point is a delivery point if it appears at an odd index (1, 3, 5, ...)
         return !isPickupPoint(point, allPoints);
     }
 
-    private static IntersectionModel getPickupPoint(IntersectionModel deliveryPoint, List<IntersectionModel> allPoints) {
+    private static Intersection getPickupPoint(Intersection deliveryPoint, List<Intersection> allPoints) {
         // For a delivery point at index i, its pickup point is at index i-1
         int deliveryIndex = allPoints.indexOf(deliveryPoint);
         return allPoints.get(deliveryIndex - 1);
     }
 
 
-    public static MapModel aStar(MapModel map, IntersectionModel start, IntersectionModel end) {
+    public static Map aStar(Map map, Intersection start, Intersection end) {
         String key = start.getId() + "-" + end.getId();
         dijkstraCalls++;
         if (memo.containsKey(key)) {
@@ -165,32 +165,32 @@ public class TSP {
         dijsktraCallsMemo++;
 
         // Initialize the distance of each intersection to infinity
-        Map<IntersectionModel, Double> gScore = new HashMap<>();
-        for (IntersectionModel intersection : map.getIntersections()) {
+        java.util.Map<Intersection, Double> gScore = new HashMap<>();
+        for (Intersection intersection : map.getIntersections()) {
             gScore.put(intersection, Double.POSITIVE_INFINITY);
         }
         gScore.put(start, 0.0);
 
         // Initialize the heuristic score of each intersection to infinity
-        Map<IntersectionModel, Double> fScore = new HashMap<>();
-        for (IntersectionModel intersection : map.getIntersections()) {
+        java.util.Map<Intersection, Double> fScore = new HashMap<>();
+        for (Intersection intersection : map.getIntersections()) {
             fScore.put(intersection, Double.POSITIVE_INFINITY);
         }
         fScore.put(start, heuristic(start, end));
 
         // Initialize the previous intersection of each intersection to null
-        Map<IntersectionModel, IntersectionModel> previous = new HashMap<>();
-        for (IntersectionModel intersection : map.getIntersections()) {
+        java.util.Map<Intersection, Intersection> previous = new HashMap<>();
+        for (Intersection intersection : map.getIntersections()) {
             previous.put(intersection, null);
         }
 
         // Initialize the set of open intersections
-        PriorityQueue<IntersectionModel> openSet = new PriorityQueue<>(Comparator.comparingDouble(fScore::get));
+        PriorityQueue<Intersection> openSet = new PriorityQueue<>(Comparator.comparingDouble(fScore::get));
         openSet.add(start);
 
         // While there are open intersections
         while (!openSet.isEmpty()) {
-            IntersectionModel current = openSet.poll();
+            Intersection current = openSet.poll();
 
             // If the current intersection is the end intersection, stop
             if (current.equals(end)) {
@@ -198,9 +198,9 @@ public class TSP {
             }
 
             // Update the distance of each neighbor of the current intersection
-            for (RoadModel road : map.getRoads()) {
+            for (Road road : map.getRoads()) {
                 if (road.containsIntersection(current.getId())) {
-                    IntersectionModel neighbor = road.isOrigin(current.getId()) ? road.getDestination() : road.getOrigin();
+                    Intersection neighbor = road.isOrigin(current.getId()) ? road.getDestination() : road.getOrigin();
                     double tentativeGScore = gScore.get(current) + road.getLength();
                     if (tentativeGScore < gScore.get(neighbor)) {
                         previous.put(neighbor, current);
@@ -215,9 +215,9 @@ public class TSP {
         }
 
         // Reconstruct the shortest path
-        List<IntersectionModel> path = new ArrayList<>();
-        List<RoadModel> roads = new ArrayList<>();
-        for (IntersectionModel intersection = end; intersection != null; intersection = previous.get(intersection)) {
+        List<Intersection> path = new ArrayList<>();
+        List<Road> roads = new ArrayList<>();
+        for (Intersection intersection = end; intersection != null; intersection = previous.get(intersection)) {
             path.add(intersection);
             // reconstruct the road
             if (previous.get(intersection) != null) {
@@ -225,12 +225,12 @@ public class TSP {
             }
         }
         Collections.reverse(path);
-        MapModel result = new MapModel(-1, path, roads);
+        Map result = new Map(-1, path, roads);
         memo.put(key, result);
         return result;
     }
 
-    private static double heuristic(IntersectionModel a, IntersectionModel b) {
+    private static double heuristic(Intersection a, Intersection b) {
         // Example heuristic: Euclidean distance (assuming coordinates are available)
         double dx = a.getLongitude() - b.getLongitude();
         double dy = a.getLatitude() - b.getLatitude();
@@ -309,9 +309,9 @@ public class TSP {
 //        return result;
 //    }
 
-    public static double calculateDistance(MapModel map) {
+    public static double calculateDistance(Map map) {
         double distance = 0;
-        for (RoadModel road : map.getRoads()) {
+        for (Road road : map.getRoads()) {
             distance += road.getLength();
         }
         return distance;
@@ -349,21 +349,21 @@ public class TSP {
 //    }
 
 
-    public static MapModel tsp(DeliveryRequestModel deliveryRequest, MapModel map) {
+    public static Map tsp(DeliveryRequest deliveryRequest, Map map) {
         long startTime = System.currentTimeMillis();
-        List<List<IntersectionModel>> permutations = generatePertinentPermutations(deliveryRequest);
-        MapModel bestMap = new MapModel(-1, new ArrayList<>(), new ArrayList<>());
+        List<List<Intersection>> permutations = generatePertinentPermutations(deliveryRequest);
+        Map bestMap = new Map(-1, new ArrayList<>(), new ArrayList<>());
         double bestDistance = Double.POSITIVE_INFINITY; // The distance of the best path found so far
-        for (List<IntersectionModel> permutation : permutations) {
-            MapModel tempBestMap = new MapModel(-1, new ArrayList<>(), new ArrayList<>());
+        for (List<Intersection> permutation : permutations) {
+            Map tempBestMap = new Map(-1, new ArrayList<>(), new ArrayList<>());
             // add warehouse to the beginning and end of the permutation
             permutation.add(0, deliveryRequest.getWarehouse().getAddress());
             permutation.add(deliveryRequest.getWarehouse().getAddress());
             double distance = 0;
             for (int i = 0; i < permutation.size() - 1; i++) {
-                IntersectionModel current = permutation.get(i);
-                IntersectionModel next = permutation.get(i + 1);
-                MapModel subMap = aStar(map, current, next);
+                Intersection current = permutation.get(i);
+                Intersection next = permutation.get(i + 1);
+                Map subMap = aStar(map, current, next);
                 tempBestMap.addMap(subMap);
                 distance += calculateDistance(subMap);
                 // heuristic

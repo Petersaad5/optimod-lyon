@@ -1,6 +1,6 @@
 package com.optimodlyon.optimodlyon.controller;
 
-import com.optimodlyon.optimodlyon.model.CourierModel;
+import com.optimodlyon.optimodlyon.model.Courier;
 import com.optimodlyon.optimodlyon.service.CourierService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +20,7 @@ public class CourierController {
     }
 
     @GetMapping
-    public List<CourierModel> getCouriers() {
+    public List<Courier> getCouriers() {
         return courierService.generateRandomCouriers(10);
     }
 }

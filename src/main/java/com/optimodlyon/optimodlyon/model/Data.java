@@ -1,67 +1,66 @@
 package com.optimodlyon.optimodlyon.model;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class Data {
-    static MapModel map;
-    List<IntersectionModel> intersections;
-    List<RoadModel> roads;
-    List<CourierModel> couriers;
-    List<TourModel> tours;
+    static Map map;
+    List<Intersection> intersections;
+    List<Road> roads;
+    List<Courier> couriers;
+    List<Tour> tours;
 
 
     public Data() {
         tours = new ArrayList<>();
     }
 
-    public Data(MapModel map, List<IntersectionModel> intersections, List<RoadModel> roads) {
+    public Data(Map map, List<Intersection> intersections, List<Road> roads) {
         this.map = map;
         this.intersections = intersections;
         this.roads = roads;
     }
 
-    public static MapModel getMap() {
+    public static Map getMap() {
         return map;
     }
 
-    public void setMap(MapModel map) {
+    public void setMap(Map map) {
         this.map = map;
     }
 
-    public List<IntersectionModel> getIntersections() {
+    public List<Intersection> getIntersections() {
         return intersections;
     }
 
-    public void setIntersections(List<IntersectionModel> intersections) {
+    public void setIntersections(List<Intersection> intersections) {
         this.intersections = intersections;
     }
 
-    public List<RoadModel> getRoads() {
+    public List<Road> getRoads() {
         return roads;
     }
 
-    public void setRoads(List<RoadModel> roads) {
+    public void setRoads(List<Road> roads) {
         this.roads = roads;
     }
 
-    public List<CourierModel> getCouriers() {
+    public List<Courier> getCouriers() {
         return couriers;
     }
 
-    public void setCouriers(List<CourierModel> couriers) {
+    public void setCouriers(List<Courier> couriers) {
         this.couriers = couriers;
     }
 
-    public void addTour(TourModel tour) {
+    public void addTour(Tour tour) {
         this.tours.add(tour);
     }
 
-    public List<TourModel> getTours() {
+    public List<Tour> getTours() {
         return tours;
     }
 
-    public void setTours(List<TourModel> tours) {
+    public void setTours(List<Tour> tours) {
         this.tours = tours;
     }
 

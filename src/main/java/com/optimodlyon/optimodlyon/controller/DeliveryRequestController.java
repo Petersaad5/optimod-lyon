@@ -10,7 +10,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/deliveryRequest")
@@ -25,15 +24,15 @@ public class DeliveryRequestController {
     }
 
     @PostMapping("/parseAndGetBestRoutePerCourier")
-    public List<TourModel> parseDeliveryRequestFile(
+    public List<Tour> parseDeliveryRequestFile(
                 @RequestParam("file") MultipartFile file,
                 @RequestParam("couriers") String couriersJson,
                 @RequestParam("deliveriesAdded") String deliveriesAddedJson
                 ) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            List<CourierModel> couriers = objectMapper.readValue(couriersJson, new TypeReference<List<CourierModel>>() {});
-            List<DeliveryModel> deliveriesAdded = objectMapper.readValue(deliveriesAddedJson, new TypeReference<List<DeliveryModel>>() {});
+            List<Courier> couriers = objectMapper.readValue(couriersJson, new TypeReference<List<Courier>>() {});
+            List<Delivery> deliveriesAdded = objectMapper.readValue(deliveriesAddedJson, new TypeReference<List<Delivery>>() {});
 
             // return {MapModel, DeliveryRequestModel}
             return deliveryRequestService.parseAndGetBestRoutePerCourier(file, couriers, deliveriesAdded);
@@ -46,7 +45,7 @@ public class DeliveryRequestController {
     public void saveTour(@RequestParam("tour") String tourJson) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            TourModel tour = objectMapper.readValue(tourJson, new TypeReference<TourModel>() {});
+            Tour tour = objectMapper.readValue(tourJson, new TypeReference<Tour>() {});
             deliveryRequestService.saveTour(tour);
         } catch (IOException e) {
             throw new RuntimeException("Failed to save tour", e);
@@ -54,7 +53,7 @@ public class DeliveryRequestController {
     }
 
     @GetMapping("/restoreTours")
-    public List<TourModel> restoreTours() {
+    public List<Tour> restoreTours() {
         return deliveryRequestService.restoreTours();
     }
 

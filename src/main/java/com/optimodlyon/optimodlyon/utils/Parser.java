@@ -1,6 +1,7 @@
 package com.optimodlyon.optimodlyon.utils;
 
 import com.optimodlyon.optimodlyon.model.*;
+import com.optimodlyon.optimodlyon.model.Map;
 import org.w3c.dom.*;
 import javax.xml.parsers.*;
 import java.io.File;
@@ -9,12 +10,12 @@ import java.util.*;
 
 
 public class Parser {
-    public static Map<Long, IntersectionModel> intersectionMap = new HashMap<>();
+    public static java.util.Map<Long, Intersection> intersectionMap = new HashMap<>();
 
 
     public static Data parsePlan(File file, Data data) {
-        List<IntersectionModel> intersections = new ArrayList<>();
-        List<RoadModel> roads = new ArrayList<>();
+        List<Intersection> intersections = new ArrayList<>();
+        List<Road> roads = new ArrayList<>();
 
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -33,7 +34,7 @@ public class Parser {
                     double longitude = Double.parseDouble(element.getAttribute("longitude"));
 
                     // create the object and store it in the map
-                    IntersectionModel intersection = new IntersectionModel(id, latitude, longitude);
+                    Intersection intersection = new Intersection(id, latitude, longitude);
                     intersectionMap.put(id, intersection);
                     intersections.add(intersection);
                 }
@@ -46,12 +47,12 @@ public class Parser {
                 if (node.getNodeType() == Node.ELEMENT_NODE) {
                     Element element = (Element) node;
                     double length = Double.parseDouble(element.getAttribute("longueur"));
-                    IntersectionModel origin = intersectionMap.get(Long.parseLong(element.getAttribute("origine")));
-                    IntersectionModel destination = intersectionMap.get(Long.parseLong(element.getAttribute("destination")));
+                    Intersection origin = intersectionMap.get(Long.parseLong(element.getAttribute("origine")));
+                    Intersection destination = intersectionMap.get(Long.parseLong(element.getAttribute("destination")));
                     String name = element.getAttribute("nomRue");
 
                     // create the object
-                    RoadModel road = new RoadModel(length, origin, destination, name);
+                    Road road = new Road(length, origin, destination, name);
                     roads.add(road);
                 }
             }
@@ -59,15 +60,15 @@ public class Parser {
             // Set the parsed intersections and roads in the data object
             data.setIntersections(intersections);
             data.setRoads(roads);
-            data.setMap(new MapModel(1, intersections, roads));
+            data.setMap(new Map(1, intersections, roads));
 
         } catch (Exception e) {
             e.printStackTrace();
         }
         return data;
     }
-    public static List<TourModel> parseDemande(File file, List<CourierModel> couriers, List<DeliveryModel> deliveriesAdded) {
-        List<TourModel> toursWithoutTSP = new ArrayList<>();
+    public static List<Tour> parseDemande(File file, List<Courier> couriers, List<Delivery> deliveriesAdded) {
+        List<Tour> toursWithoutTSP = new ArrayList<>();
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
@@ -76,7 +77,7 @@ public class Parser {
 
             // Parse <entrepot> element
             NodeList warehouseList = document.getElementsByTagName("entrepot");
-            WarehouseModel warehouse = null;
+            Warehouse warehouse = null;
             for (int i = 0; i < warehouseList.getLength(); i++) {
                 Node node = warehouseList.item(i);
                 if (node.getNodeType() == Node.ELEMENT_NODE) {
@@ -89,21 +90,21 @@ public class Parser {
                     Date heureDepart = dateFormat.parse(heureDepartStr);
 
                     // Retrieve the IntersectionModel using the id
-                    IntersectionModel address = intersectionMap.get(adresse);
+                    Intersection address = intersectionMap.get(adresse);
 //                    if (address == null) {
 //                        address = new IntersectionModel(adresse);
 //                        intersectionMap.put(adresse, address);
 //                    }
 
                     // Create the WarehouseModel object
-                    warehouse = new WarehouseModel(heureDepart, address);
+                    warehouse = new Warehouse(heureDepart, address);
                 }
             }
 
             for(int i = 0; i < couriers.size(); i++) {
                 // Create the DeliveryRequestModel object
-                TourModel tour = new TourModel();
-                DeliveryRequestModel deliveryRequest = new DeliveryRequestModel();
+                Tour tour = new Tour();
+                DeliveryRequest deliveryRequest = new DeliveryRequest();
                 deliveryRequest.setWarehouse(warehouse);
                 deliveryRequest.setDeliveries(new ArrayList<>());
                 deliveryRequest.setCourier(couriers.get(i));
@@ -123,20 +124,20 @@ public class Parser {
                     int dureeLivraison = Integer.parseInt(element.getAttribute("dureeLivraison"));
 
                     // Retrieve the IntersectionModel using the id
-                    IntersectionModel originIntersection = intersectionMap.get(origine);
+                    Intersection originIntersection = intersectionMap.get(origine);
 //                    if (originIntersection == null) {
 //                        originIntersection = new IntersectionModel(origine);
 //                        intersectionMap.put(origine, originIntersection);
 //                    }
 
-                    IntersectionModel destinationIntersection = intersectionMap.get(destination);
+                    Intersection destinationIntersection = intersectionMap.get(destination);
 //                    if (destinationIntersection == null) {
 //                        destinationIntersection = new IntersectionModel(destination);
 //                        intersectionMap.put(destination, destinationIntersection);
 //                    }
 
                     // Create the DeliveryModel object
-                    DeliveryModel delivery = new DeliveryModel(dureeLivraison, dureeEnlevement, destinationIntersection, originIntersection);
+                    Delivery delivery = new Delivery(dureeLivraison, dureeEnlevement, destinationIntersection, originIntersection);
                     int indexCourier = (i % couriers.size());
                     toursWithoutTSP.get(indexCourier).getDeliveryRequest().getDeliveries().add(delivery);
                 }

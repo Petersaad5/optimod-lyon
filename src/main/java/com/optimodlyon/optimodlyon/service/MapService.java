@@ -1,7 +1,7 @@
 package com.optimodlyon.optimodlyon.service;
 
 import com.optimodlyon.optimodlyon.model.Data;
-import com.optimodlyon.optimodlyon.model.MapModel;
+import com.optimodlyon.optimodlyon.model.Map;
 import com.optimodlyon.optimodlyon.utils.Parser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ public class MapService {
         this.dataService = dataService;
     }
 
-    public MapModel parseAndGetMapData(MultipartFile file) throws IOException {
+    public Map parseAndGetMapData(MultipartFile file) throws IOException {
         // init map because a new map is parsed
         if (dataService.getData().getMap() != null) {
             dataService.initData(dataService.getData().getTours(), dataService.getData().getCouriers());
@@ -38,7 +38,7 @@ public class MapService {
         return data.getMap();
     }
 
-    public MapModel getMapData() {
+    public Map getMapData() {
         return dataService.getData().getMap();
     }
 }

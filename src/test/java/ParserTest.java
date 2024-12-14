@@ -1,6 +1,6 @@
 import com.optimodlyon.optimodlyon.model.Data;
-import com.optimodlyon.optimodlyon.model.IntersectionModel;
-import com.optimodlyon.optimodlyon.model.RoadModel;
+import com.optimodlyon.optimodlyon.model.Intersection;
+import com.optimodlyon.optimodlyon.model.Road;
 import com.optimodlyon.optimodlyon.utils.Parser;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,8 +26,8 @@ public class ParserTest {
         String filePath = "src/public/xml/petitPlan.xml";
         Parser.parsePlan(new File(filePath), data);
 
-        List<IntersectionModel> intersections = data.getIntersections();
-        List<RoadModel> roads = data.getRoads();
+        List<Intersection> intersections = data.getIntersections();
+        List<Road> roads = data.getRoads();
 
         assertNotNull(intersections);
         assertNotNull(roads);
