@@ -25,9 +25,11 @@ public class DeliveryRequestController {
     }
 
     @PostMapping("/parseAndGetBestRoutePerCourier")
-    public List<TourModel> parseDeliveryRequestFile(@RequestParam("file") MultipartFile file,
-                                             @RequestParam("couriers") String couriersJson,
-                                             @RequestParam("deliveriesAdded") String deliveriesAddedJson) {
+    public List<TourModel> parseDeliveryRequestFile(
+                @RequestParam("file") MultipartFile file,
+                @RequestParam("couriers") String couriersJson,
+                @RequestParam("deliveriesAdded") String deliveriesAddedJson
+                ) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             List<CourierModel> couriers = objectMapper.readValue(couriersJson, new TypeReference<List<CourierModel>>() {});
