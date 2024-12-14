@@ -6,7 +6,8 @@ public class Courier {
     private Long id;
     private String name;
 
-
+    public Courier() {
+    }
 
     public Courier(Long id, String name) {
         this.id = id;
