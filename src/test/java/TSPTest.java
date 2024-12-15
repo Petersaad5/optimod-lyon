@@ -48,6 +48,8 @@ public class TSPTest {
 
         Map route = TSP.tsp(tours.get(0).getDeliveryRequest(), data.getMap());
 
+//        assertEquals(route.getIntersections().size(), );
+
         assertEquals(route.getIntersections().get(0), tours.get(0).getDeliveryRequest().getWarehouse().getAddress());
         assertEquals(route.getIntersections().get(route.getIntersections().size()-1), tours.get(0).getDeliveryRequest().getWarehouse().getAddress());
 

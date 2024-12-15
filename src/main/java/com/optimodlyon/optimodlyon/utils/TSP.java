@@ -49,7 +49,7 @@ public class TSP {
             allPoints.add(delivery.getDestination()); // Delivery point
         }
 
-        // Step 2: Generate permutations using nearest neighbor heuristic
+        // Step 2: Generate permutations using nearest neighbor calculateEuclidienDistance
         List<Intersection> currentPermutation = new ArrayList<>();
         Set<Intersection> usedPoints = new HashSet<>();
         currentPermutation.add(warehouseIntersection);
@@ -73,19 +73,13 @@ public class TSP {
         return permutations;
     }
 
-    private static double calculateDistancePermutation(Intersection a, Intersection b) {
-        double dx = a.getLongitude() - b.getLongitude();
-        double dy = a.getLatitude() - b.getLatitude();
-        return Math.sqrt(dx * dx + dy * dy);
-    }
-
     private static Intersection findNearestNeighbor(Intersection current, List<Intersection> allPoints, Set<Intersection> usedPoints) {
         Intersection nearestNeighbor = null;
         double shortestDistance = Double.POSITIVE_INFINITY;
 
         for (Intersection point : allPoints) {
             if (!usedPoints.contains(point)) {
-                double distance = calculateDistancePermutation(current, point);
+                double distance = calculateEuclidienDistance(current, point);
                 if (distance < shortestDistance) {
                     shortestDistance = distance;
                     nearestNeighbor = point;
@@ -171,12 +165,12 @@ public class TSP {
         }
         gScore.put(start, 0.0);
 
-        // Initialize the heuristic score of each intersection to infinity
+        // Initialize the calculateEuclidienDistance score of each intersection to infinity
         java.util.Map<Intersection, Double> fScore = new HashMap<>();
         for (Intersection intersection : map.getIntersections()) {
             fScore.put(intersection, Double.POSITIVE_INFINITY);
         }
-        fScore.put(start, heuristic(start, end));
+        fScore.put(start, calculateEuclidienDistance(start, end));
 
         // Initialize the previous intersection of each intersection to null
         java.util.Map<Intersection, Intersection> previous = new HashMap<>();
@@ -205,7 +199,7 @@ public class TSP {
                     if (tentativeGScore < gScore.get(neighbor)) {
                         previous.put(neighbor, current);
                         gScore.put(neighbor, tentativeGScore);
-                        fScore.put(neighbor, tentativeGScore + heuristic(neighbor, end));
+                        fScore.put(neighbor, tentativeGScore + calculateEuclidienDistance(neighbor, end));
                         if (!openSet.contains(neighbor)) {
                             openSet.add(neighbor);
                         }
@@ -230,8 +224,8 @@ public class TSP {
         return result;
     }
 
-    private static double heuristic(Intersection a, Intersection b) {
-        // Example heuristic: Euclidean distance (assuming coordinates are available)
+    private static double calculateEuclidienDistance(Intersection a, Intersection b) {
+        // Example calculateEuclidienDistance: Euclidean distance (assuming coordinates are available)
         double dx = a.getLongitude() - b.getLongitude();
         double dy = a.getLatitude() - b.getLatitude();
         return Math.sqrt(dx * dx + dy * dy);
@@ -333,7 +327,7 @@ public class TSP {
 //                MapModel subMap = dijkstra(map, current, next);
 //                tempBestMap.addMap(subMap);
 //                distance += calculateDistance(subMap);
-//                // heuristic
+//                // calculateEuclidienDistance
 //                if (distance > bestDistance) {
 //                    break;
 //                }
@@ -366,7 +360,7 @@ public class TSP {
                 Map subMap = aStar(map, current, next);
                 tempBestMap.addMap(subMap);
                 distance += calculateDistance(subMap);
-                // heuristic
+                // calculateEuclidienDistance
                 if (distance > bestDistance) {
                     break;
                 }
