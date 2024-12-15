@@ -165,7 +165,7 @@ public class TSP {
         }
         gScore.put(start, 0.0);
 
-        // Initialize the calculateEuclidienDistance score of each intersection to infinity
+        // Initialize the heuristic score of each intersection to infinity
         java.util.Map<Intersection, Double> fScore = new HashMap<>();
         for (Intersection intersection : map.getIntersections()) {
             fScore.put(intersection, Double.POSITIVE_INFINITY);
@@ -350,9 +350,6 @@ public class TSP {
         double bestDistance = Double.POSITIVE_INFINITY; // The distance of the best path found so far
         for (List<Intersection> permutation : permutations) {
             Map tempBestMap = new Map(-1, new ArrayList<>(), new ArrayList<>());
-            // add warehouse to the beginning and end of the permutation
-            permutation.add(0, deliveryRequest.getWarehouse().getAddress());
-            permutation.add(deliveryRequest.getWarehouse().getAddress());
             double distance = 0;
             for (int i = 0; i < permutation.size() - 1; i++) {
                 Intersection current = permutation.get(i);
