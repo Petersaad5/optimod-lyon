@@ -400,6 +400,9 @@ public class TSP {
                     System.out.println("currentId : " + current.getId() + " nextId : " + next.getId());
                     subMap.getIntersections().remove(0);
                 }
+
+
+
                 tempBestMap.addMap(subMap);
                 distance += calculateDistance(subMap);
                 // calculateEuclidienDistance

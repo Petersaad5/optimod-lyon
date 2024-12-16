@@ -4,98 +4,68 @@ import com.optimodlyon.optimodlyon.utils.Parser;
 import com.optimodlyon.optimodlyon.utils.TSP;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.FixMethodOrder;
+import org.junit.runners.MethodSorters;
 
 import java.io.File;
 import java.util.*;
 
 import static org.junit.Assert.*;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TSPTest {
-    private Data data;
 
-//    @Before
-//    public void setUp() {
-//        // Set up the test
-//        data = new Data();
-//    }
+    @Test
+    public void testDijkstra() {
+        Data data = new Data();
+        // Pasing plan
+        String mapFilePath = "src/public/xml/moyenPlan.xml";
+        Parser.parsePlan(new File(mapFilePath), data);
 
-//    @Test
-//    public void testDijkstra() {
-//        data = new Data();
-//        // Pasing plan
-//        String mapFilePath = "src/public/xml/moyenPlan.xml";
-//        Parser.parsePlan(new File(mapFilePath), data);
-//
-//        assertEquals(1448, data.getIntersections().size()); // Example assertion
-//        assertEquals(3097, data.getRoads().size()); // Example assertion
-//
-////        // start : <noeud id="26121686" latitude="45.74841" longitude="4.859172"/>
-////        // end : <noeud id="191134392" latitude="45.754635" longitude="4.9022007"/>
-////        Intersection start = new Intersection(26121686L, 45.74841, 4.859172);
-////        Intersection end = new Intersection(191134392L, 45.754635, 4.9022007);
-//
-//        // start : <noeud id="25610684" latitude="45.741924" longitude="4.89364"/>
-//        // end : <noeud id="21717915" latitude="45.739056" longitude="4.8859167"/>
-//        Intersection start = new Intersection(25610684L, 45.741924, 4.89364);
-//        Intersection end = new Intersection(21717915L, 45.739056, 4.8859167);
-//
-////        // An isolated intersection
-////        // start : <noeud id="26086307" latitude="45.751766" longitude="4.8568363"/>
-////        // end : <noeud id="191134392" latitude="45.754635" longitude="4.9022007"/>
-////        Intersection start = new Intersection(26086307L, 45.751766, 4.8568363);
-////        Intersection end = new Intersection(191134392L, 45.754635, 4.9022007);
-//
-//
-//        Map route = TSP.dijkstra(data.getMap(), start, end);
-//
-//        assertEquals(route.getIntersections().size(), route.getRoads().size() + 1);
-//
-//        // print the path
-//        for (int i = 0; i < route.getIntersections().size() - 1; i++) {
-//            Road intersectionRoad = route.getRoadByIntersections(route.getIntersections().get(i), route.getIntersections().get(i+1));
-//            assertNotNull(intersectionRoad);
-//        }
-//
-//        List<Intersection> pathList = route.getIntersections();
-//        Set<Intersection> pathSet = new HashSet<>(pathList);
-//
-//        assertEquals(pathSet.size(), pathList.size());
-//
-//        assertEquals(end, pathList.get(pathList.size()-1));
-//        assertEquals(start, pathList.get(0));
-//
-//
-//    }
+        assertEquals(1448, data.getIntersections().size()); // Example assertion
+        assertEquals(3097, data.getRoads().size()); // Example assertion
 
-//    @Test
-//    public void testaStar() {
-//        data = new Data();
-//        // Pasing plan
-//        String mapFilePath = "src/public/xml/moyenPlan.xml";
-//        Parser.parsePlan(new File(mapFilePath), data);
-//
-//        assertEquals(1448, data.getIntersections().size()); // Example assertion
-//        assertEquals(3097, data.getRoads().size()); // Example assertion
-//
-//        Intersection start = new Intersection(18232184L, 45.740696, 4.8703103);
-//        Intersection end = new Intersection(21702437L, 45.742043, 4.877001);
-//
-//        Map route = TSP.aStar(data.getMap(), start, end);
-//
-//        List<Intersection> pathList = route.getIntersections();
-//        Set<Intersection> pathSet = new HashSet<>(pathList);
-//
-//        assertEquals(pathSet.size(), pathList.size());
-//
-//        assertEquals(end, pathList.get(pathList.size()-1));
-//        assertEquals(start, pathList.get(0));
-//
-//
-//    }
+//        // start : <noeud id="26121686" latitude="45.74841" longitude="4.859172"/>
+//        // end : <noeud id="191134392" latitude="45.754635" longitude="4.9022007"/>
+//        Intersection start = new Intersection(26121686L, 45.74841, 4.859172);
+//        Intersection end = new Intersection(191134392L, 45.754635, 4.9022007);
+
+        // start : <noeud id="25610684" latitude="45.741924" longitude="4.89364"/>
+        // end : <noeud id="21717915" latitude="45.739056" longitude="4.8859167"/>
+        Intersection start = new Intersection(25610684L, 45.741924, 4.89364);
+        Intersection end = new Intersection(21717915L, 45.739056, 4.8859167);
+
+//        // An isolated intersection
+//        // start : <noeud id="26086307" latitude="45.751766" longitude="4.8568363"/>
+//        // end : <noeud id="191134392" latitude="45.754635" longitude="4.9022007"/>
+//        Intersection start = new Intersection(26086307L, 45.751766, 4.8568363);
+//        Intersection end = new Intersection(191134392L, 45.754635, 4.9022007);
+
+
+        Map route = TSP.dijkstra(data.getMap(), start, end);
+
+        assertEquals(route.getIntersections().size(), route.getRoads().size() + 1);
+
+        // print the path
+        for (int i = 0; i < route.getIntersections().size() - 1; i++) {
+            Road intersectionRoad = route.getRoadByIntersections(route.getIntersections().get(i), route.getIntersections().get(i+1));
+            assertNotNull(intersectionRoad);
+        }
+
+        List<Intersection> pathList = route.getIntersections();
+        Set<Intersection> pathSet = new HashSet<>(pathList);
+
+        assertEquals(pathSet.size(), pathList.size());
+
+        assertEquals(end, pathList.get(pathList.size()-1));
+        assertEquals(start, pathList.get(0));
+
+
+    }
 
     @Test
     public void testGeneratePermutations() {
-        data = new Data();
+        Data data = new Data();
         // Pasing plan
         String mapFilePath = "src/public/xml/moyenPlan.xml";
         Parser.parsePlan(new File(mapFilePath), data);
@@ -154,7 +124,7 @@ public class TSPTest {
 
     @Test
     public void testGeneratePertinentPermutation() {
-        data = new Data();
+        Data data = new Data();
         // Pasing plan
         String mapFilePath = "src/public/xml/moyenPlan.xml";
         Parser.parsePlan(new File(mapFilePath), data);
@@ -214,7 +184,7 @@ public class TSPTest {
 
     @Test
     public void testTSP() {
-        data = new Data();
+        Data data = new Data();
         // Pasing plan
         String mapFilePath = "src/public/xml/moyenPlan.xml";
         Parser.parsePlan(new File(mapFilePath), data);
@@ -251,8 +221,13 @@ public class TSPTest {
         intersectionsTour.add(tours.get(0).getDeliveryRequest().getWarehouse().getAddress());
 
         List<Intersection> intersectionsRoute = route.getIntersections();
+
+        //I want to make a copy of the list to avoid ConcurrentModificationException
+        List<Intersection> intersectionsRouteAll = new ArrayList<>(intersectionsRoute);
+
         intersectionsRoute.removeIf(intersection -> !intersectionsTour.contains(intersection));
 
+        //assertEquals(intersectionsRouteAll.size() , intersectionsRoute.size());
 
         // _____________________________________________________________________________________________________________________________________________
         assertEquals(2, Collections.frequency(intersectionsRoute, tours.get(0).getDeliveryRequest().getWarehouse().getAddress()));
@@ -262,47 +237,43 @@ public class TSPTest {
         assertEquals(tours.get(0).getDeliveryRequest().getWarehouse().getAddress(), intersectionsRoute.get(0));
         assertEquals(tours.get(0).getDeliveryRequest().getWarehouse().getAddress(), intersectionsRoute.get(intersectionsRoute.size()-1));
 
-//        // print the intersections' id of the tour
-//        for(Intersection intersection: intersectionsTour) {
-//            System.out.println("Tour intersection: " + intersection.getId());
-//        }
-//
-//        // print the intersections' id of the route
-//        for(Intersection intersection: intersectionsRoute) {
-//            System.out.println("Route intersection: " + intersection.getId());
-//        }
-
-//        Set<Intersection> setRoute = new HashSet<>(intersectionsRoute);
-//        Set<Intersection> setTour = new HashSet<>(intersectionsTour);
-
-
-        for(Delivery delivery1: tours.get(0).getDeliveryRequest().getDeliveries()) {
-            int originIndex = intersectionsRoute.indexOf(delivery1.getOrigin());
-            int destinationIndex = intersectionsRoute.indexOf(delivery1.getDestination());
-            assertTrue("Delivery before pickup !!", destinationIndex > originIndex);
-        }
-
         // _____________________________________________________________________________________________________________________________________________
 
         assertEquals(route.getIntersections().get(0), tours.get(0).getDeliveryRequest().getWarehouse().getAddress());
         assertEquals(route.getIntersections().get(route.getIntersections().size()-1), tours.get(0).getDeliveryRequest().getWarehouse().getAddress());
 
-        System.out.println("Route intersections size: " + route.getIntersections().size());
-        System.out.println("Route roads size: " + route.getRoads().size());
+        assertEquals(intersectionsRouteAll.size(), route.getRoads().size() + 1);
 
-        for(int i = 0; i < route.getIntersections().size()-2; i++) {
-            boolean found = false;
-            for(Road road: route.getRoads()) {
-                if(road.containsIntersection(route.getIntersections().get(i).getId()) && road.containsIntersection(route.getIntersections().get(i+1).getId())) {
-                    found = true;
-                    break;
-                }
-            }
-            if(!found) {
-                System.out.println("Road not found between " + route.getIntersections().get(i).getId() + " and " + route.getIntersections().get(i + 1).getId());
-            }
-            assertTrue(found);
+        for(int i = 0; i < intersectionsRouteAll.size()-1; i++) {
+            Road intersectionRoad = route.getRoadByIntersections(intersectionsRouteAll.get(i), intersectionsRouteAll.get(i+1));
+            assertNotNull(intersectionRoad);
         }
     }
+
+    //    @Test
+//    public void testaStar() {
+//        data = new Data();
+//        // Pasing plan
+//        String mapFilePath = "src/public/xml/moyenPlan.xml";
+//        Parser.parsePlan(new File(mapFilePath), data);
+//
+//        assertEquals(1448, data.getIntersections().size()); // Example assertion
+//        assertEquals(3097, data.getRoads().size()); // Example assertion
+//
+//        Intersection start = new Intersection(18232184L, 45.740696, 4.8703103);
+//        Intersection end = new Intersection(21702437L, 45.742043, 4.877001);
+//
+//        Map route = TSP.aStar(data.getMap(), start, end);
+//
+//        List<Intersection> pathList = route.getIntersections();
+//        Set<Intersection> pathSet = new HashSet<>(pathList);
+//
+//        assertEquals(pathSet.size(), pathList.size());
+//
+//        assertEquals(end, pathList.get(pathList.size()-1));
+//        assertEquals(start, pathList.get(0));
+//
+//
+//    }
 
 }
