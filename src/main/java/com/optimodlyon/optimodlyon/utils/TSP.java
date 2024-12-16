@@ -20,24 +20,28 @@ public class TSP {
         }
     };
 
-//    public static List<List<IntersectionModel>> generatePermutations(DeliveryRequestModel deliveryRequest) {
-//        List<DeliveryModel> deliveries = deliveryRequest.getDeliveries();
-//        List<List<IntersectionModel>> permutations = new ArrayList<>();
-//        IntersectionModel warehouseIntersection = deliveryRequest.getWarehouse().getAddress();
-//
-//        // Step 1: Create a list of pickup and delivery pairs
-//        List<IntersectionModel> allPoints = new ArrayList<>();
-//        for (DeliveryModel delivery : deliveries) {
-//            allPoints.add(delivery.getOrigin()); // Pickup point
-//            allPoints.add(delivery.getDestination()); // Delivery point
-//        }
-//
-//        // Step 2: Backtracking to generate valid permutations
-//        backtrack(permutations, new ArrayList<>(), allPoints, new HashSet<>(), new HashSet<>());
-//        return permutations;
-//    }
+    public static List<List<Intersection>> generatePermutations(DeliveryRequest deliveryRequest) {
+        List<Delivery> deliveries = deliveryRequest.getDeliveries();
+        List<List<Intersection>> permutations = new ArrayList<>();
+        Intersection warehouseIntersection = deliveryRequest.getWarehouse().getAddress();
 
-    public static List<List<Intersection>> generatePertinentPermutations(DeliveryRequest deliveryRequest) {
+        // Step 1: Create a list of pickup and delivery pairs
+        List<Intersection> allPoints = new ArrayList<>();
+        for (Delivery delivery : deliveries) {
+            allPoints.add(delivery.getOrigin()); // Pickup point
+            allPoints.add(delivery.getDestination()); // Delivery point
+        }
+
+        // Step 2: Backtracking to generate valid permutations
+        backtrack(permutations, new ArrayList<>(), allPoints, new HashSet<>(), new HashSet<>());
+        for(List<Intersection> permutation: permutations) {
+            permutation.add(0, warehouseIntersection);
+            permutation.add(warehouseIntersection);
+        }
+        return permutations;
+    }
+
+    public static List<List<Intersection>> generatePertinentPermutation(DeliveryRequest deliveryRequest) {
         List<Delivery> deliveries = deliveryRequest.getDeliveries();
         List<List<Intersection>> permutations = new ArrayList<>();
         Intersection warehouseIntersection = deliveryRequest.getWarehouse().getAddress();
@@ -57,7 +61,19 @@ public class TSP {
 
         while (currentPermutation.size() < allPoints.size() + 1) {
             Intersection lastPoint = currentPermutation.get(currentPermutation.size() - 1);
-            Intersection nextPoint = findNearestNeighbor(lastPoint, allPoints, usedPoints);
+            if(lastPoint == null) {
+                throw new IllegalArgumentException("Last point is null");
+            }
+
+            List<Intersection> possiblePoints = new ArrayList<>(allPoints);
+            possiblePoints.removeAll(usedPoints);
+            for(Delivery delivery: deliveries) {
+                if (!usedPoints.contains(delivery.getOrigin()) && !usedPoints.contains(delivery.getDestination())) {
+                    possiblePoints.remove(delivery.getDestination());
+                }
+            }
+
+            Intersection nextPoint = findNearestNeighbor(lastPoint, possiblePoints, usedPoints);
             if (nextPoint != null) {
                 currentPermutation.add(nextPoint);
                 usedPoints.add(nextPoint);
@@ -79,6 +95,14 @@ public class TSP {
 
         for (Intersection point : allPoints) {
             if (!usedPoints.contains(point)) {
+                if(current == null || point == null) {
+                    if(current == null) {
+                        throw new IllegalArgumentException("Current is null");
+                    }
+                    if(point == null) {
+                        throw new IllegalArgumentException("Point is null");
+                    }
+                }
                 double distance = calculateEuclidienDistance(current, point);
                 if (distance < shortestDistance) {
                     shortestDistance = distance;
@@ -231,77 +255,91 @@ public class TSP {
         return Math.sqrt(dx * dx + dy * dy);
     }
 
-//    public static MapModel dijkstra(MapModel map, IntersectionModel start, IntersectionModel end) {
-//        String key = start.getId() + "-" + end.getId();
-//        dijkstraCalls++;
-//        if (memo.containsKey(key)) {
-//            return memo.get(key);
+    public static Map dijkstra(Map map, Intersection start, Intersection end) {
+        String key = start.getId() + "-" + end.getId();
+        dijkstraCalls++;
+        if (memo.containsKey(key)) {
+            return memo.get(key);
+        }
+
+        dijsktraCallsMemo++;
+
+        // map of distances
+        java.util.Map<Long, Double> distances = new HashMap<>(map.getIntersections().size());
+        for(Intersection intersection : map.getIntersections()) {
+            distances.put(intersection.getId(), Double.POSITIVE_INFINITY);
+        }
+        distances.put(start.getId(), 0.0);
+
+        // initialize priority queue
+        PriorityQueue<Long> queue = new PriorityQueue<>(Comparator.comparingDouble(distances::get));
+        queue.add(start.getId());
+
+        // map of previous intersections
+        java.util.Map<Long, Long> previous = new HashMap<>();
+        for(Intersection intersection : map.getIntersections()) {
+            previous.put(intersection.getId(), null);
+        }
+        previous.put(start.getId(), start.getId());
+
+
+        //visited set
+        Set<Long> visited = new HashSet<>();
+
+        while(!queue.isEmpty()) {
+            Long current = queue.poll();
+            if(visited.contains(current)) {
+                continue;
+            }
+
+            visited.add(current);
+
+            for(Road neighborRoad : map.getRoads(current)) {
+                Double weight = neighborRoad.getLength();
+                if(weight < 0.0) {
+                    throw new IllegalArgumentException("Negative weight on road in the map");
+                }
+                Long neighbor = neighborRoad.isOrigin(current) ? neighborRoad.getDestination().getId() : neighborRoad.getOrigin().getId();
+                Double newDistance = distances.get(current) + weight;
+
+                if(newDistance < distances.get(neighbor)) {
+                    distances.put(neighbor, newDistance);
+                    queue.add(neighbor);
+                    previous.put(neighbor, current);
+                }
+            }
+        }
+
+        if(distances.get(end.getId()) == Double.POSITIVE_INFINITY) {
+            throw new IllegalArgumentException("No path found between the two intersections, map isn't connected");
+        }
+
+        // Reconstruct the shortest path
+        List<Intersection> path = new ArrayList<>();
+        List<Road> roads = new ArrayList<>();
+        for (Long intersectionId = end.getId(); intersectionId != start.getId(); intersectionId = previous.get(intersectionId)) {
+            path.add(map.getIntersectionById(intersectionId));
+            // reconstruct the road
+            roads.add(map.getRoadByIntersections(map.getIntersectionById(intersectionId), map.getIntersectionById(previous.get(intersectionId))));
+        }
+
+        path.add(map.getIntersectionById(start.getId()));
+        Collections.reverse(path);
+
+        Map result = new Map(-1, path, roads);
+
+
+
+        memo.put(key, result);
+
+//        if(result.getIntersections().isEmpty()) {
+//            throw new IllegalArgumentException("Path is empty");
 //        }
-//
-//        dijsktraCallsMemo++;
-//
-//        // Initialize the distance of each intersection to infinity
-//        Map<IntersectionModel, Double> distance = new HashMap<>();
-//        for (IntersectionModel intersection : map.getIntersections()) {
-//            distance.put(intersection, Double.POSITIVE_INFINITY);
+//        else {
+//            System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPath size: " + result.getIntersections().size());
 //        }
-//        distance.put(start, 0.0);
-//
-//        // Initialize the previous intersection of each intersection to null
-//        Map<IntersectionModel, IntersectionModel> previous = new HashMap<>();
-//        for (IntersectionModel intersection : map.getIntersections()) {
-//            previous.put(intersection, null);
-//        }
-//
-//        // Initialize the set of unvisited intersections
-//        Set<IntersectionModel> unvisited = new HashSet<>(map.getIntersections());
-//
-//        // While there are unvisited intersections
-//        while (!unvisited.isEmpty()) {
-//            // Find the intersection with the smallest distance
-//            IntersectionModel current = null;
-//            for (IntersectionModel intersection : unvisited) {
-//                if (current == null || distance.get(intersection) < distance.get(current)) {
-//                    current = intersection;
-//                }
-//            }
-//
-//            // Remove the current intersection from the set of unvisited intersections
-//            unvisited.remove(current);
-//
-//            // If the current intersection is the end intersection, stop
-//            if (current.equals(end)) {
-//                break;
-//            }
-//
-//            // Update the distance of each neighbor of the current intersection
-//            for (RoadModel road : map.getRoads()) {
-//                if (road.containsIntersection(current.getId())) {
-//                    IntersectionModel neighbor = road.isOrigin(current.getId()) ? road.getDestination() : road.getOrigin();
-//                    double newDistance = distance.get(current) + road.getLength();
-//                    if (newDistance < distance.get(neighbor)) {
-//                        distance.put(neighbor, newDistance);
-//                        previous.put(neighbor, current);
-//                    }
-//                }
-//            }
-//        }
-//
-//        // Reconstruct the shortest path
-//        List<IntersectionModel> path = new ArrayList<>();
-//        List<RoadModel> roads = new ArrayList<>();
-//        for (IntersectionModel intersection = end; intersection != null; intersection = previous.get(intersection)) {
-//            path.add(intersection);
-//            // reconstruct the road
-//            if (previous.get(intersection) != null) {
-//                roads.add(map.getRoadByIntersections(intersection, previous.get(intersection)));
-//            }
-//        }
-//        Collections.reverse(path);
-//        MapModel result = new MapModel(-1, path, roads);
-//        memo.put(key, result);
-//        return result;
-//    }
+        return result;
+    }
 
     public static double calculateDistance(Map map) {
         double distance = 0;
@@ -345,7 +383,7 @@ public class TSP {
 
     public static Map tsp(DeliveryRequest deliveryRequest, Map map) {
         long startTime = System.currentTimeMillis();
-        List<List<Intersection>> permutations = generatePertinentPermutations(deliveryRequest);
+        List<List<Intersection>> permutations = generatePertinentPermutation(deliveryRequest);
         Map bestMap = new Map(-1, new ArrayList<>(), new ArrayList<>());
         double bestDistance = Double.POSITIVE_INFINITY; // The distance of the best path found so far
         for (List<Intersection> permutation : permutations) {
@@ -354,7 +392,14 @@ public class TSP {
             for (int i = 0; i < permutation.size() - 1; i++) {
                 Intersection current = permutation.get(i);
                 Intersection next = permutation.get(i + 1);
-                Map subMap = aStar(map, current, next);
+//                Map subMap = aStar(map, current, next);
+                Map subMap = dijkstra(map, current, next);
+//                System.out.println("Debuggg: " + subMap.getIntersections().get(0).getId() + " - " + subMap.getIntersections().get(subMap.getIntersections().size()-1).getId());
+                if(i != 0) {
+                    System.out.println(i + " : Intersections size = " + subMap.getIntersections().size());
+                    System.out.println("currentId : " + current.getId() + " nextId : " + next.getId());
+                    subMap.getIntersections().remove(0);
+                }
                 tempBestMap.addMap(subMap);
                 distance += calculateDistance(subMap);
                 // calculateEuclidienDistance
