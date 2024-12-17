@@ -297,7 +297,8 @@ public class TSP {
             for(Road neighborRoad : map.getRoads(current)) {
                 Double weight = neighborRoad.getLength();
                 if(weight < 0.0) {
-                    throw new IllegalArgumentException("Negative weight on road in the map");
+//                    throw new IllegalArgumentException("Negative weight on road in the map");
+                    return new Map(-20, new ArrayList<>(), new ArrayList<>());
                 }
                 Long neighbor = neighborRoad.isOrigin(current) ? neighborRoad.getDestination().getId() : neighborRoad.getOrigin().getId();
                 Double newDistance = distances.get(current) + weight;
@@ -311,7 +312,8 @@ public class TSP {
         }
 
         if(distances.get(end.getId()) == Double.POSITIVE_INFINITY) {
-            throw new IllegalArgumentException("No path found between the two intersections, map isn't connected");
+//            throw new IllegalArgumentException("No path found between the two intersections, map isn't connected");
+            return new Map(-10, new ArrayList<>(), new ArrayList<>());
         }
 
         // Reconstruct the shortest path
@@ -395,6 +397,13 @@ public class TSP {
 //                Map subMap = aStar(map, current, next);
                 Map subMap = dijkstra(map, current, next);
 //                System.out.println("Debuggg: " + subMap.getIntersections().get(0).getId() + " - " + subMap.getIntersections().get(subMap.getIntersections().size()-1).getId());
+
+                if(subMap.getId() == -20) {
+                    return new Map(-20, new ArrayList<>(), new ArrayList<>());
+                } else if (subMap.getId() == -10) {
+                    return new Map(-10, new ArrayList<>(), new ArrayList<>());
+                }
+
                 if(i != 0) {
                     System.out.println(i + " : Intersections size = " + subMap.getIntersections().size());
                     System.out.println("currentId : " + current.getId() + " nextId : " + next.getId());
